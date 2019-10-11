@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="commons/header :: common"></head>
+	</head>
+
+	<body class="no-skin">
+
+		<div class="main-container ace-save-state" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.loadState('main-container')}catch(e){}
+			</script>
+      
+
+			<!--- 内容主体 start -->
+			<div class="main-content">
+				<div class="main-content-inner">
+
+					<!-- 向导栏 end-->
+
+					<!-- 内容页 start -->
+					<div class="page-content">
+				          			<div class="widget-box transparent" id="widget-box-13">
+												<div class="widget-header">
+													<h4 class="widget-title lighter"><a href="/testScores/to_list">首页</a><b>》</b><a th:href="'/testScores/to_studentList?class_id='+${map.class_id}+'&test_title='+${map.test_title}">学生成绩管理</a><b>》</b></h4>
+
+													<div class="widget-toolbar no-border">
+														<ul class="nav nav-tabs" id="myTab2">
+															<li  class="active">
+																<a data-toggle="tab" href="#adminAdd">编辑</a>
+															</li>
+															<li>
+																<a data-toggle="tab" href="javascript:void(0)" onclick="window.location.href='/modular/toModularList'">列表</a>
+															</li>
+														</ul>
+													</div>
+												</div>
+
+												<div class="widget-body">
+													<div class="widget-main padding-12 no-padding-left no-padding-right">
+														<div class="tab-content padding-4">
+														
+															<div id="adminAdd" class="tab-pane in active ">
+																<div class="scrollable-horizontal" data-size="800">
+																	<form action="/testScores/saveScores" method="get" class="form-horizontal" >
+																		<input type="hidden" name="score_id" th:value="${map.score_id}">
+																		<div class="form-group">
+																			<label class="col-sm-3 control-label no-padding-right"> 学生名: </label>
+
+																			<div class="col-sm-9" style="margin-top: 1%">
+																		    [[${map.user_name}]]
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<label class="col-sm-3 control-label no-padding-right" >试卷名称:</label>
+																			<div class="col-sm-9" style="margin-top: 1%">
+																				[[${map.test_title}]]
+																		</div>
+																		</div>
+																		<div class="form-group">
+																				<label class="col-sm-3 control-label no-padding-right" >成绩:</label>
+																				<div class="col-sm-9">
+																					<input name="score" type="text" th:value="${map.score}" placeholder="输入成绩。。。">
+																				</div>
+																		</div>
+																		<div class="form-group">
+																			
+																			<div class="col-sm-7 text-right">
+																				<button type="submit" class="btn btn-primary">保存成绩</button>
+																			</div>
+																		</div>
+																	</form>
+
+																</div>
+															</div>
+
+												
+														</div>
+													</div>
+												</div>
+											</div>
+					</div><!-- /.page-content -->
+					<!-- 内容页 end -->
+				</div>
+			</div><!-- /.main-content -->
+			<!--- 内容主体 end -->
+
+		
+			 <!--页尾 end -->
+		</div><!-- /.main-container -->
+
+		<script src="../static/ace-admin/js/jquery.min.js"></script>
+		<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+		<script src="../static/ace-admin/js/layer/laydate/laydate.js"></script>
+		<script src="../static/ace-admin/js/layer/layer.min.js"></script>
+		<!-- inline scripts related to this page -->
+		<section>
+			<script th:inline="javascript">
+                $(function () {
+                    var msg1 = [[${msg1}]];
+                    var msg2 = [[${msg2}]];
+                    if (msg1 != null) {
+                        layer.msg(msg1,{
+                            time: 0,//不自动关闭
+                            icon: 6,
+                            btn: ['确定', '取消'],
+                            yes: function (index) {
+                                layer.close(index);
+                                location.href = "/testScores/to_studentList?class_id="+[[${map.class_id}]]+'&test_title='+[[${map.test_title}]]
+                            }
+                        });
+                    }
+                    if (msg2 != null) {
+                        layer.alert('内容')
+
+                        layer.alert(msg2, {
+                            icon: 5,
+                            skin: 'layer-ext-moon',
+                        })
+
+                    }
+                })
+			</script>
+		</section>
+	</body>
+</html>

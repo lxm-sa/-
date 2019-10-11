@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="commons/header :: common"></head>
+<meta charset="UTF-8">
+<title>部件信息展示</title>
+</head>
+<body >
+<div class="widget-header row">
+    <diV class="col-sm-4">
+        <h4 class="widget-title lighter">部件学习</h4>
+    </div>
+    <div class=" col-sm-2" id="nav-search" >
+        <form class="form-search" action="/study/selelctPartShow">
+            <input type="hidden" name="data" value="1"  />
+				<span class="input-icon">
+				<input type="text" name="barcode_id" placeholder="将鼠标放入..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+				<i class="ace-icon fa fa-search nav-search-icon"></i>
+			</span>
+        </form>
+    </div><!-- /.nav-search -->
+</div>
+<div style="font-size: 40px;margin-top: 80px;text-align: center">
+    请使用扫码枪对一维码进行扫码学习
+</div>
+<script src="../static/ace-admin/js/jquery.min.js"></script>
+<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+<script src="../static/ace-admin/js/layer/laydate/laydate.js"></script>
+<script src="../static/ace-admin/js/layer/layer.min.js"></script>
+<section>
+    <script th:inline="javascript">
+        window.onload = function(){
+            var oInput = document.getElementById("nav-search-input");
+            oInput.focus();
+
+        }
+        $(function () {
+            var msg1 = [[${msg1}]];
+            var msg2 = [[${msg2}]];
+            if(msg1!=null) {
+                layer.msg(msg1, {
+                    time: 0 ,//不自动关闭
+                    icon:6,
+                    btn: ['确定', '取消'],
+                    yes: function(index){
+                        layer.close(index);
+                    }
+                });
+            }
+            if(msg2!=null){
+                layer.alert('内容')
+
+                layer.alert(msg2, {
+                    icon: 5,
+                    skin: 'layer-ext-moon',
+                })
+
+            }
+        })
+   </script>
+    </section>
+</body>
+</html>

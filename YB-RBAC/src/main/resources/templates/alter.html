@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>优标教育-修改个人信息</title>
+    <meta charset="UTF-8">
+    <title>优标教育-注册页面</title>
+    <link href="../static/ace-admin/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/ace-admin/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../static/ace-admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../static/ace-admin/css/animate.css" rel="stylesheet">
+    <link href="../static/ace-admin/js/layer/skin/layer.css" rel="stylesheet">
+    <style type="text/css">
+
+        body {
+            overflow: scroll;
+        }
+        .news{
+            margin-top: 4%;
+        }
+        .has-success  {
+            border-color: #1ab394;
+        }
+        .has-warning  {
+            border-color: #f8ac59;
+        }
+        .has-error {
+            border-color: #ed5565;
+        }
+        .has-success  {
+            color: #1ab394;
+        }
+        .has-warning  {
+            color: #f8ac59;
+        }
+        .has-error {
+            color: #ed5565;
+        }
+    </style>
+</head>
+<body>
+<div class="row">
+    <div class="col-sm-4">
+
+    </div>
+    <form role="form" action="/user/saveAlter" onsubmit="return test()">
+
+        <div class="col-sm-4  form-group" style="background-color: aliceblue;margin-top: 3%">
+            <div class="row ">
+                <div  class="col-sm-4 " style="font-size: 20px;">
+                    <label>用户名:</label>
+                </div>
+                <div class="col-sm-8" >
+                    <input id="id" name="user_id" type="hidden" th:value="${session.user.user.user_id}">
+                    <input id="userid" th:value="${session.user.user.user_name}" name="user_name" type="text" placeholder="请输入您的真实姓名" class="form-control" onblur="username()">
+                </div>
+            </div>
+            <div class="row news">
+                <div class="col-sm-4 " style="font-size: 20px;">
+                    <label>账号名:</label>
+                </div>
+                <div class="col-sm-8" >
+                    <input id="accountNameid" th:value="${session.user.user.account_name}" name="account_name" type="text"  placeholder="请输入您的用户账号" class="form-control" onblur="accountName1()">
+                    <th:block th:fragment="list">
+                        <th:block th:if="${msg != null}">
+                            <span style='color: red' id="text" value="aaa" th:text="${msg}"> </span>
+                        </th:block>
+                    </th:block>
+                </div>
+            </div>
+            <div class="row news">
+                    <div class="col-sm-6 " style="font-size: 20px;margin-top: 1%">
+                        <label>性别:</label>
+                    </div>
+                    <div class="col-sm-6" style="margin-top: 1%;font-size: 20px">
+                        <div th:if="${session.user.user.sex==0}">
+                            <input name="sex" type="radio" value="0"  checked><span>男</span>
+                            <input name="sex" type="radio" value="1" >女
+                        </div>
+                        <div th:if="${session.user.user.sex==1}">
+                            <input name="sex" type="radio" value="0"  ><span>男</span>
+                            <input name="sex" type="radio" value="1"checked >女
+                        </div>
+                    </div>
+            </div>
+            <div class="news row">
+                <div class="col-sm-4" style="font-size: 20px;margin-top: 1%">
+                    <label>身份证号:</label>
+                </div>
+                <div class="col-sm-8">
+                    <input id="identityId" th:value="${session.user.user.identity_id}" name="identity_id"type="text" onblur="identity()" placeholder="请输入您的身份证号" class="form-control">
+                </div>
+            </div>
+            <div class="news row">
+                <div class="col-sm-4" style="font-size: 20px;margin-top: 1%">
+                    <label>出生日期:</label>
+                </div>
+                <div class="col-sm-8 " >
+                    <div class=" row ">
+                        <div class="col-sm-10">
+                            <input name="birthday"  th:value="${#dates.format(session.user.user.birthday,'yyyy-MM-dd')}"   class="form-control layer-date" placeholder="YYYY-MM-DD hh:mm:ss" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="laydate-icon"></label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="news row">
+                <div class="col-sm-4" style="font-size: 20px;margin-top: 1%">
+                    <label>家庭住址:</label>
+                </div>
+                <div class="col-sm-8">
+                    <input name="hometowm"  th:value="${session.user.user.hometowm}"  type="text" placeholder="请输入您的家庭住址" class="form-control">
+                </div>
+
+            </div>
+            <div class="news row">
+                <div class="col-sm-4" style="font-size: 20px;margin-top: 1%">
+                    <label>学校:</label>
+                </div>
+                <div class="col-sm-8">
+                    <input name="school" th:value="${session.user.user.school}" type="text" placeholder="请输入您的学校" class="form-control">
+                </div>
+
+            </div>
+            <div class="news row">
+                <div class="col-sm-4" style="font-size: 20px;margin-top: 1%">
+                    <label>手机号码:</label>
+                </div>
+                <div class="col-sm-8">
+                    <input id="telphoneId"  th:value="${session.user.user.telphone}" name="telphone" type="text" onblur="telphone1()" placeholder="请输入您的手机号码" class="form-control">
+                </div>
+
+            </div>
+            <div class="row " style="font-size: 150%;background-color: #7b7b7b">
+                <div class="col-sm-4" style="margin-left: 30%">
+                    <input type="submit" value="保存"  >
+                </div>
+                <div class="col-sm-4">
+                    <input type="reset" value="重置" >
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="col-sm-4">
+
+    </div>
+</div>
+
+<!-- 全局js -->
+<script src="../static/ace-admin/js/jquery.min.js"></script>
+<script src="../static/ace-admin/js/layer/layer.min.js"></script>
+
+<script src="../static/ace-admin/js/manager/content.js"></script>
+
+<script src="../static/ace-admin/js/layer/laydate/laydate.js"></script>
+<section>
+    <script th:inline="javascript">
+        $(function () {
+            var msg1 = [[${msg1}]];
+            var msg2 = [[${msg2}]];
+            var name=[[${session.user.user.user_name}]];
+            if(msg1!=null) {
+                layer.msg(msg1, {
+                    time: 0 ,//不自动关闭
+                    icon:6,
+                    btn: ['确定', '取消'],
+                    yes: function(index){
+                        layer.close(index);
+                        parent.$("#nameid").remove()
+                        parent.$(".user-info").append("<small id='nameid'>"+name+"</small>")
+                    }
+                });
+            }
+            if(msg2!=null){
+                layer.alert('内容')
+
+                layer.alert(msg2, {
+                    icon: 5,
+                    skin: 'layer-ext-moon',
+                })
+
+            }
+        })
+        function username() {
+            $("#userid").next().remove()
+            var username=$("#userid").val()
+            var regstr=/^[\u4e00-\u9fa5]{2,6}$/;
+            if(!regstr.test(username)){
+                $("#userid").parent().append("<span style='color: red'>姓名必须是2-10个字的中文</span>")
+                $("#userid").removeClass("has-success")
+                $("#userid").addClass("has-error")
+                return false
+            }else{
+
+                $("#userid").removeClass("has-error")
+                $("#userid").addClass("has-success")
+                return true
+            }
+        }
+
+        function accountName1() {
+            $("#accountNameid").next().remove()
+            var accountName=$("#accountNameid").val()
+            var regstr= /^[a-zA-Z0-9_-]{4,16}$/;
+            if(!regstr.test(accountName)){
+                $("#accountNameid").parent().append("<span style='color: red'>账号名必须是4到16位（字母，数字，下划线，减号）</span>")
+                $("#accountNameid").removeClass("has-success")
+                $("#accountNameid").addClass("has-error")
+                return false
+            }else{
+                getaccount(accountName)
+
+                if($("#accountNameid").hasClass('msg')){
+                    return false
+                }
+                $("#accountNameid").removeClass("has-error")
+                $("#accountNameid").addClass("has-success")
+                return true
+            }
+        }
+
+        function identity() {
+            $("#identityId").next().remove()
+            var identityId=$("#identityId").val()
+            var regstr= /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+            if(!regstr.test(identityId)){
+                $("#identityId").parent().append("<span style='color: red'>身份证输入不正确</span>")
+                $("#identityId").removeClass("has-success")
+                $("#identityId").addClass("has-error")
+                return false
+            }else{
+
+                $("#identityId").removeClass("has-error")
+                $("#identityId").addClass("has-success")
+                return true
+            }
+        }
+        function telphone1() {
+            $("#telphoneId").next().remove()
+            var telphone=$("#telphoneId").val()
+            var regstr=  /^1(3|4|5|6|7|8|9)\d{9}$/;
+            if(!regstr.test(telphone)){
+                $("#telphoneId").parent().append("<span style='color: red'>手机号码输入不正确</span>")
+                $("#telphoneId").removeClass("has-success")
+                $("#telphoneId").addClass("has-error")
+                return false
+            }else{
+
+                $("#telphoneId").removeClass("has-error")
+                $("#telphoneId").addClass("has-success")
+                return true
+            }
+        }
+        function test() {
+
+            if(!(username()&&accountName1()&&identity()&&telphone1())){
+                alert("用户信息不能为空或者输入有误");
+                return false
+            }
+            return true
+        }
+        function getaccount(accountName) {
+            var userid=$("#id").val()
+            $.ajax({
+                url:'/user/alterAccountName',
+                data:{'account_name':accountName,'user_id':userid},
+                dataType: 'json',
+                contentType: 'application/json',
+                success:function (data) {
+                    if(data.msg!=null){
+                        $("#accountNameid").parent().append( "<span style='color: red' class='msg' id='text' value='aaa '>"+data.msg+"</span>")
+                        $("#accountNameid").removeClass("has-success")
+                        $("#accountNameid").addClass("has-error")
+                    }
+                }
+            })
+        }
+
+    </script>
+</section>
+
+<script src="../static/ace-admin/js/jquery.min.js"></script>
+<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+<!-- 自定义js -->
+
+<!-- iCheck -->
+<script src="../static/ace-admin/js/manager/icheck.min.js"></script>
+</body>
+</html>

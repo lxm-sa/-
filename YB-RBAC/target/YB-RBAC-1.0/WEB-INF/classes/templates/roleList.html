@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head th:include="commons/header :: common"></head>
+	<body class="no-skin" >
+        <div class="main-container ace-save-state" id="main-container" style="margin-bottom: 0px">
+					<!-- 内容页 start -->
+					<div class="page-content" style="margin-bottom: 0px">
+				          			<div class="widget-box transparent" id="widget-box-12">
+												<div class="widget-header">
+													<h4 class="widget-title lighter">角色管理</h4>
+
+													<div class="widget-toolbar no-border">
+														<ul class="nav nav-tabs" id="myTab2" >
+															<shiro:hasAllPermissions name="role:toadd">
+																<li>
+																	<a data-toggle="tab" href="javascript:void(0)" onclick="window.location.href='/role/toRoleAdd'" style="text-align: center;text-decoration: none;margin-right: 10px">增加</a>
+																</li>
+															</shiro:hasAllPermissions>
+
+															<li class="active">
+																<a data-toggle="tab" href="#roleList">列表</a>
+															</li>
+														</ul>
+													</div>
+												</div>
+
+												<div class="widget-body">
+													<div class="widget-main padding-12 no-padding-left no-padding-right">
+														<div class="tab-content padding-4">
+																<div class="row deleteCheck">
+																	<div class="col-sm-10" style="height: 40px">
+															         <shiro:hasPermission name="role:deleteCheckRoles">
+																     <button id="btnDeleteCheckRole" class="btn btn-primary">删除勾选用户</button>
+															         </shiro:hasPermission>
+																	</div>
+																<div class="nav-search col-sm-2" id="nav-search" >
+																	<form class="form-search" action="/role/selectRole_name">
+								                                          <span class="input-icon">
+									                                         <input type="text" name="role_name" placeholder="角色名..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+									                                         <i class="ace-icon fa fa-search nav-search-icon"></i>
+								                                          </span>
+																	</form>
+																</div><!-- /.nav-search -->
+																</div>
+																 <table class="table table-striped table-bordered align-center "> 
+																    <tr class="bolder" >
+																	  <td><input id="chkAllRole" type="checkbox"></td>
+																	  <td>编号</td>
+																	  <td>角色名</td>
+																	  <td width="70%">角色权限</td>
+																	  <shiro:hasPermission name="role:toRoleEdit or role:deleteRoleById">
+																	  <td>操作</td>
+																	  </shiro:hasPermission>
+																	</tr>
+																	 <tr class="table" th:each="role,rolestat:${roles}">
+																	  <td><input name="roleId" th:value="${role.role_id }" type="checkbox"></td>
+																	  <td>[[${role.role_id }]]</td>
+																	  <td>[[${role.role_name }]]</td>
+																	  <td>[[${role.perIds}]]</td>
+															        <shiro:hasPermission name="role:toRoleEdit or role:deleteRoleById">
+																	    <td>
+																			<shiro:hasPermission name="role:toRoleEdit">
+                                                                                <button class="btn btn-minier btn-white btn-info" ><a style="text-decoration:none;" target="_self" th:href="'/role/toRoleEdit?role_id='+${role.role_id}">&nbsp;编&nbsp;辑&nbsp;</a></button>
+                                                                           </shiro:hasPermission>
+                                                                            &nbsp;&nbsp;
+                                                                              <shiro:hasPermission name="role:deleteRoleById">
+                                                                                 <button class="btn btn-minier btn-white btn-info" ><a  style="text-decoration:none;" target="_self" th:href="'/role/deleteRoleById?role_id='+${role.role_id}">&nbsp;删&nbsp;除&nbsp;</a></button>
+                                                                              </shiro:hasPermission>
+                                                                            </td>
+                                                                          </shiro:hasPermission>
+                                                                      </tr>
+                                                                   </table>
+                                              <nav style="float: right;margin-outside: 90%">
+                                                  <ul class="pagination" style="margin-top: 0px;margin-bottom: 0px">
+                                                      <li th:if="${index>1}">
+                                                          <a th:href="'/role/toRoleList?index='+${index-1}"  aria-label="Previous">
+                                                              <span aria-hidden="true">&laquo;</span>
+                                                          </a>
+                                                      </li>
+                                                      <li class="disabled" th:if="${index==1}">
+                                                          <a href="#" aria-label="Previous">
+                                                              <span aria-hidden="true">&laquo;</span>
+                                                          </a>
+                                                      </li>
+
+                                                      <li th:if="${count<10}" th:each="i,start:${#numbers.sequence(1,count)}">
+                                                          <a  th:if="${index==i}" href="#" class="active" style="background-color: #8AB2C9"><span th:width="20px"  >[[${i}]]</span></a>
+                                                          <a th:if="${index!=i}" th:href="'/role/toRoleList?index='+${i}"><span th:width="20px"  >[[${i}]]</span></a>
+                                                      </li>
+                                                      <li th:if="${count>=10}" th:each="i,start:${#numbers.sequence(index-4,index+5)}">
+                                                          <a  th:if="${index==i}" href="#" class="active" style="background-color: #8AB2C9"><span th:width="20px"  >[[${i}]]</span></a>
+                                                          <a th:if="${index!=i}" th:href="'/role/toRoleList?index='+${i}"><span th:width="20px"  >[[${i}]]</span></a>
+                                                      </li>
+                                                      <li th:if="${index!=count}">
+                                                          <a th:href="'/role/toRoleList?index='+${index+1}" aria-label="Next">
+                                                              <span aria-hidden="true">&raquo;</span>
+                                                          </a>
+                                                      </li>
+                                                      <li class="disabled" th:if="${index==count}">
+
+                                                          <a href="#" aria-label="Next">
+                                                                  <span aria-hidden="true">&raquo;</span>
+                                                          </a>
+                                                      </li>
+                                                  </ul>
+                                              </nav>
+                              </div>
+                          </div>
+                      </div><!-- /.page-content -->
+					<!-- 内容页 end -->
+				</div>
+			</div><!-- /.main-content -->
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+
+		<script src="../static/ace-admin/js/jquery.min.js"></script>
+		<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+		<script src="../static/ace-admin/js/layer/laydate/laydate.js"></script>
+		<script src="../static/ace-admin/js/layer/layer.min.js"></script>
+	<section>
+		<script th:inline="javascript">
+            $(function () {
+                var navbar=window.parent.$("#navbar").outerHeight()
+                var content=window.parent.$(".content-tabs").outerHeight()
+                var widgetheader=$(".widget-header").outerHeight()+10
+                var deleteCheck=$(".deleteCheck").outerHeight()+100
+                var h=(window.innerHeight-content-widgetheader-deleteCheck)/8
+                $(".table").attr("style","height:"+h+"px;")
+                $(".table").children().attr("style","vertical-align: middle")
+                var msg1 = [[${msg1}]];
+                var msg2 = [[${msg2}]];
+                var name=[[${session.user.user.user_name}]];
+                if(msg1!=null) {
+                    layer.msg(msg1, {
+                        time: 0 ,//不自动关闭
+                        icon:6,
+                        btn: ['确定', '取消'],
+                        yes: function(index){
+                            layer.close(index);
+                            parent.$("#nameid").remove()
+                            parent.$(".user-info").append("<small id='nameid'>"+name+"</small>")
+                        }
+                    });
+                }
+                if(msg2!=null){
+                    layer.alert('内容')
+
+                    layer.alert(msg2, {
+                        icon: 5,
+                        skin: 'layer-ext-moon',
+                    })
+
+                }
+            })
+            $("#chkAllRole").click(function(){
+                //当前绑定的控件选中，其他复选框全部选中，否则全部反选
+                if($(this).prop("checked")==true){
+                    $("input[name='roleId']").prop("checked",true);
+                }else{
+                    $("input[name='roleId']").prop("checked",false);
+                }
+            });
+            //将选择的记录发送的后台删除
+            $("#btnDeleteCheckRole").click(function(){
+                //获得全选中的复选框的值
+                var chk=$("input[name='roleId']:checked");
+                //发送选择的控件的值到后台
+                location.href="/role/deleteCheckRoles?"+chk.serialize();
+            });
+
+		</script>
+	</section>
+	</body>
+</html>

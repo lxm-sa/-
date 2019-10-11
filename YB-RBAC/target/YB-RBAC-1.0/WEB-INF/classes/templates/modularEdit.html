@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="commons/header :: common"></head>
+	</head>
+
+	<body class="no-skin">
+
+		<div class="main-container ace-save-state" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.loadState('main-container')}catch(e){}
+			</script>
+      
+
+			<!--- 内容主体 start -->
+			<div class="main-content">
+				<div class="main-content-inner">
+
+					<!-- 向导栏 end-->
+
+					<!-- 内容页 start -->
+					<div class="page-content">
+				          			<div class="widget-box transparent" id="widget-box-13">
+												<div class="widget-header">
+													<h4 class="widget-title lighter">模块管理</h4>
+
+													<div class="widget-toolbar no-border">
+														<ul class="nav nav-tabs" id="myTab2">
+															<li  class="active">
+																<a data-toggle="tab" href="#adminAdd">编辑</a>
+															</li>
+															<li>
+																<a data-toggle="tab" href="javascript:void(0)" onclick="window.location.href='/modular/toModularList'">列表</a>
+															</li>
+														</ul>
+													</div>
+												</div>
+
+												<div class="widget-body">
+													<div class="widget-main padding-12 no-padding-left no-padding-right">
+														<div class="tab-content padding-4">
+														
+															<div id="adminAdd" class="tab-pane in active ">
+																<div class="scrollable-horizontal" data-size="800">
+																	<form th:action="'/modular/saveModular?modular_id='+${modular.modular_id}" method="post" class="form-horizontal" role="form">
+																		<div class="form-group">
+																			<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 模块名 </label>
+
+																			<div class="col-sm-9">
+																				<input name="modular_name" th:value="${modular.modular_name}" type="text" id="form-field-2" placeholder="模块名" class="col-xs-10 col-sm-5" />
+																			</div>
+																		</div>
+																		
+																		<div class="form-group">
+																			<label class="col-sm-3 control-label no-padding-right" for="form-field-1">模块默认状态</label>
+
+																			<div class="col-sm-9">
+																				<select name="modular_default_status">
+																					<div th:if="${modular.modular_default_status=='close'}">
+																						<option value="close" selected>关闭</option>
+																						<option value="open">展开</option>
+																					</div>
+																					<div th:if="${modular.modular_default_status=='open'}">
+																						<option value="close" >关闭</option>
+																						<option value="open" selected>展开</option>
+																					</div>
+																				</select>
+																			</div>
+																		</div>
+																		
+																		<div class="form-group">
+																			<label class="col-sm-3 control-label no-padding-right" for="form-field-1">排序序号</label>
+
+																			<div class="col-sm-9">
+																				<input name="order_number" th:value="${modular.order_number}" type="text" id="form-field-1" placeholder="排序序号" class="col-xs-10 col-sm-5" />
+																			</div>
+																		</div>
+
+																	
+																		<div class="form-group">
+																			
+																			<div class="col-sm-7 text-right">
+																				<button type="submit" class="btn btn-primary">保存模块</button>
+																			</div>
+																		</div>
+																	</form>
+
+																</div>
+															</div>
+
+												
+														</div>
+													</div>
+												</div>
+											</div>
+					</div><!-- /.page-content -->
+					<!-- 内容页 end -->
+				</div>
+			</div><!-- /.main-content -->
+			<!--- 内容主体 end -->
+
+		
+			 <!--页尾 end -->
+		</div><!-- /.main-container -->
+
+		<script src="../static/ace-admin/js/jquery.min.js"></script>
+		<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+		<script src="../static/ace-admin/js/layer/laydate/laydate.js"></script>
+		<script src="../static/ace-admin/js/layer/layer.min.js"></script>
+		<!-- inline scripts related to this page -->
+		<section>
+			<script th:inline="javascript">
+                $(function () {
+                    var msg1 = [[${msg1}]];
+                    var msg2 = [[${msg2}]];
+                    if (msg1 != null) {
+                        layer.msg(msg1, {
+                            time: 0,//不自动关闭
+                            icon: 6,
+                            btn: ['确定', '取消'],
+                            yes: function (index) {
+                                layer.close(index);
+                                location.href = "/modular/toModularList"
+                            }
+                        });
+                    }
+                    if (msg2 != null) {
+                        layer.alert('内容')
+
+                        layer.alert(msg2, {
+                            icon: 5,
+                            skin: 'layer-ext-moon',
+                        })
+
+                    }
+                })
+			</script>
+		</section>
+	</body>
+</html>

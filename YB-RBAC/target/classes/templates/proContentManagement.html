@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<meta charset="UTF-8"/>
+	<title></title>
+	<link href="../static/ace-admin/css/bootstrap.min.css" rel="stylesheet"/>
+	<link href="../static/ace-admin/css/bootstrap-table.min.css" rel="stylesheet"/>
+	<link href="../static/ace-admin/css/animate.min.css" rel="stylesheet"/>
+	<link href="../static/ace-admin/css/font-awesome.min.css" rel="stylesheet"/>
+	<link rel="stylesheet" href="../static/ace-admin/css/plugins/bootstrapValidator/bootstrapValidator.min.css"/>
+	<link rel="stylesheet" href="../static/ace-admin/css/style.min.css" />
+	<style>
+		.back:hover{cursor: pointer;}
+		.fixed-table-toolbar .btn-group>.btn-group:last-child>.btn {
+			border-top-right-radius: 0px;
+			border-bottom-right-radius: 0px;
+		}
+		label{width:100px;}
+		.popup_de{
+			background-color:rgba(0,0,0,0.3);
+			width:100%;
+			height: 100%;
+			position:fixed;
+			z-index:999;
+			top:0;
+			left:0;
+			display:none;
+		}
+
+		.bbox{
+			display: -webkit-box;   /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+			display: -moz-box;      /* 老版本语法: Firefox (buggy) */
+			display: -ms-flexbox;   /* 混合版本语法: IE 10 */
+			display: -webkit-flex;  /* 新版本语法: Chrome 21+ */
+			display: -moz-flex;
+			display: flex;          /* 新版本语法: Opera 12.1, Firefox 22+ */
+		}
+		.bbox.xycenter{
+			-moz-box-pack: center; /*Firefox*/
+			-webkit-box-pack: center; /*Safari,Opera,Chrome*/
+			box-pack: center;
+			-moz-justify-content: center;
+			-webkit-justify-content: center;
+			justify-content: center;
+			-moz-box-align: center; /*Firefox*/
+			-webkit-box-align:center; /*Safari,Opera,Chrome*/
+			box-align: center;
+			-moz-align-items: center;
+			-webkit-align-items: center;
+			align-items:center;
+		}
+		.popup_de .popup_box{
+			width:300px;
+			height:150px;
+			font-family: '微软雅黑';
+			background-color: #fff;
+			border-radius:5px;
+			color:#333;
+		}
+		.popup_de .popup_btn{
+			display: inline-block;
+			width:100px;
+			height:30px;
+			border-radius: 3px;
+			border:1px solid #1ab394;
+			font-size:15px;
+			text-align: center;
+			line-height: 30px;
+			margin-right:15px;
+			cursor: pointer;
+		}
+		.popup_de .show_msg{
+			display: block;
+			width:100%;
+			text-align: center;
+			font-size:18px;
+			margin-top:40px;
+			margin-bottom: 20px;
+			padding:10px;
+		}
+		.popup_de .popup_close{
+			width:30px;
+			height:30px;
+			font-size:25px;
+			text-align: center;
+			display: inline-block;
+			cursor:pointer;
+			float: right;
+			border-top-right-radius: 5px;
+			line-height:30px;
+		}
+		.popup_de .popup_close:hover{
+			background-color: #1ab394;
+			color:#fff;
+		}
+		.popup_de .btn_submit{
+			background-color: #1ab394;
+			color:#fff;
+		}
+		.popup_de .btn_box{
+			text-align: center;
+		}
+
+	</style>
+</head>
+<body>
+	<div class="tableBody">
+		<nav class="navbar navbar-inverse " role="navigation">
+			<div class="container-fluid">
+				<div style="margin-left: 50px">
+					<ul class="nav navbar-nav">
+						<shiro:haspermission name="sources:learnSourcesPage">
+							<li ><a href="/learnSourcesPage">条形码资源管理</a></li>
+						</shiro:haspermission>
+						<shiro:haspermission name="sources:categoryPage">
+							<li ><a href="/categoryPage">条形码资源分类管理</a></li>
+						</shiro:haspermission>
+						<shiro:haspermission name="sources:subjectPage">
+							<li ><a href="/subjectPage">学习科目管理</a></li>
+						</shiro:haspermission>
+						<shiro:haspermission name="sources:partPage">
+							<li ><a href="/partPage">部件管理</a></li>
+						</shiro:haspermission>
+						<shiro:haspermission name="sources:projectPage">
+							<li ><a href="/projectPage">实训项目管理</a></li>
+						</shiro:haspermission>
+						<shiro:haspermission name="sources:proContentPage">
+							<li class="active"><a href="/proContentPage">实训内容管理</a></li>
+						</shiro:haspermission>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<div style="width: 95%; margin:0 auto;font-size: 15px;">
+		<table id="mytab" class="table table-hover"></table>
+		</div>
+		<div id="toolbar" class="btn-group pull-right" style="margin-right: 20px; margin-top: 10px">
+			<button id="btn_edit" type="button" class="btn btn-default" style="color: rgb(255, 140, 60);display: none; border-radius: 0">
+				<span class="glyphicon glyphicon-edit" style="color: rgb(255, 140, 60);" aria-hidden="true" ></span>&nbsp;&nbsp;修改项目内容信息
+			</button>
+			<button id="btn_delete" type="button" class="btn btn-default" style="color: rgb(252, 28, 45);display: none">
+				<span class="glyphicon glyphicon-trash" style="color: rgb(252, 28, 45);" aria-hidden="true"></span>&nbsp;&nbsp;删除项目内容
+			</button>
+			<button id="btn_add" type="button" style="color: rgb(0, 144, 45);" class="btn btn-default" data-toggle="modal" data-target="#myModal">
+				<span class="glyphicon glyphicon-plus" style="color: rgb(0, 144, 45);" aria-hidden="true"></span>&nbsp;&nbsp;新增项目内容
+			</button>
+			<button id="btn_partManage" type="button" class="btn btn-default" style="color: rgb(114, 70, 6);display: none" data-toggle="modal" data-target="#addpartModal">
+				<span class="glyphicon glyphicon-cog" style="color: rgb(114, 70, 6);" aria-hidden="true"></span>&nbsp;&nbsp;内容部件管理
+			</button>
+		</div>
+	</div>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="col-sm-12">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<button type="button" class="close" data-dismiss="modal"
+									aria-hidden="true">×
+							</button>
+							<h5>新增项目内容</h5>
+						</div>
+						<div class="ibox-content">
+							<form id="addForm" method="post" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-2 control-label">项目名称</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" name="content_name" id="add_Name"/>
+									</div>
+								</div>
+								<div class="hr-line-dashed"></div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">所属项目</label>
+									<div class="col-sm-10" style="margin-top: auto">
+										<select id="add_pro" name="pro_id" class="selectpicker" title="请选择项目" data-width="300px" data-height="35px" style="height: 35px;width: 300px">
+
+										</select>
+									</div>
+								</div>
+								<div class="hr-line-dashed"></div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">描述</label>
+									<div class="col-sm-10">
+										<textarea style="width:400px;height:100px;" name="remark" id="add_remark"></textarea>
+									</div>
+								</div>
+								<div class="hr-line-dashed"></div>
+								<div class="form-group">
+									<div class="col-sm-2 col-sm-offset-2">
+										<button type="button" class="btn btn-primary btn-block"  id="add_saveBtn">保存</button>
+									</div>
+									<div class="col-sm-2 col-sm-offset-1">
+										<button type="button" class="btn btn-default btn-block" data-dismiss="modal">关闭</button>
+									</div>
+								</div>
+
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="partBody" style="width:90%; margin-left:80px; display: none;position: absolute;top:10px">
+		<div class="col-sm-12">
+			<div >
+				<div class="ibox-title">
+					<h5><input type="text" class="form-control" name="content_name" id="content_Name" readonly/></h5>
+					<div class="col-sm-2 col-sm-offset-1" style="float:right">
+						<button type="button" class="btn btn-primary btn-block" style="width: 120px; margin-left: 100px;font-size: 16px;font-weight: bolder"  id="backBtn" onclick="aaa()">返回</button>
+					</div>
+				</div>
+
+				<div class="ibox-content">
+					<div class="form-group" style="display:none" >
+						<label class="col-sm-2 control-label">CID</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="content_id" id="content_ID" readonly/>
+						</div>
+					</div>
+					<table id="parttab" class="table table-hover"></table>
+					<div id="tool" class="btn-group pull-right" style="margin-right: 20px; margin-top: 10px">
+
+						<button id="btn_deletePart" type="button" class="btn btn-default" style="display: none">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除部件
+						</button>
+
+						<button id="btn_addPart" type="button" class="btn btn-default" data-toggle="modal" data-target="#mypartModal">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>添加部件
+						</button>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal fade"style="width: 800px;height:100%;margin: auto;" id="mypartModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width:100%;height:100%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						部件信息
+					</h4>
+				</div>
+				<div class="modal-body" style="width:100%">
+					<div class="panel panel-default">
+						<div class="panel-body form-group" style="margin-bottom:0px;">
+							<label class="col-sm-2 control-label" style="text-align: right;align:right; margin-top:5px;margin-left:250px">部件名称：</label>
+							<div class="col-sm-2" >
+								<input type="text" class="form-control" name="part_name" id="search_name"/>
+							</div>
+							<div class="col-sm-2 " style="margin-left:20px">
+								<button class="btn btn-primary" id="search_btn">查询</button>
+							</div>
+
+						</div>
+					</div>
+					<table id="myparttab"></table>
+					<div id="ptool" class="btn-group pull-right" style="margin-right: 20px; margin-top: 10px"></div>
+				</div>
+
+				<div class="modal-footer" style="width:100%;height:60px">
+					<button type="button" class="btn btn-default"
+							data-dismiss="modal">关闭
+					</button>
+					<button id="btn_padd" type="button"  class="btn btn-primary">
+						添加
+					</button>
+				</div>
+				<div class="popup_de xycenter" style="margin-top: 200px;">
+					<div class="popup_box">
+						<span class="popup_close" value="关闭">×</span>
+						<span class="show_msg"></span>
+						<div class="btn_box">
+							<div class="popup_btn btn_submit" value="确定">确定</div>
+							<div class="popup_btn btn_cancel" value="取消">取消</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.moda-->
+
+
+
+	<div class="changeBody" style="width:100%; height:500px; display: none;position: absolute;top:10px;">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>修改内容信息</h5>
+				</div>
+				<div class="ibox-content">
+					<form id="editForm" method="post" class="form-horizontal">
+						<div class="form-group" style="display:none" >
+							<label class="col-sm-2 control-label">ID</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="content_id" id="edit_ID" readonly/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">内容名称</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="content_name" id="edit_Name"/>
+							</div>
+						</div>
+						<div class="hr-line-dashed"></div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">内容描述</label>
+							<div class="col-sm-10">
+								<textarea style="width:400px;height:100px;" name="remark" id="edit_remark"></textarea>
+							</div>
+						</div>
+						<div class="hr-line-dashed"></div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">所属项目</label>
+							<div class="col-sm-10" style="margin-top: auto">
+								<select id="edit_pro" name="pro_name" class="selectpicker" title="请选择项目" data-width="300px" data-height="35px" style="height: 35px;width: 300px">
+
+								</select>
+							</div>
+
+						</div>
+
+						<div class="hr-line-dashed"></div>
+						<div class="form-group">
+							<div class="col-sm-2 col-sm-offset-2">
+								<button type="button" class="btn btn-primary btn-block"  id="edit_saveBtn">保存</button>
+							</div>
+							<div class="col-sm-2 col-sm-offset-1">
+								<button type="button" class="btn btn-default btn-block"  id="edit_backBtn">返回</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="popup_de xycenter">
+		<div class="popup_box">
+			<span class="popup_close" value="关闭">×</span>
+			<span class="show_msg">确定要删除该权限吗？</span>
+			<div class="btn_box">
+				<div class="popup_btn btn_submit" value="确定">确定</div>
+				<div class="popup_btn btn_cancel" value="取消">取消</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="../static/ace-admin/js/jquery.min.js"></script>
+<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+<script src="../static/ace-admin/js/layer/layer.js"></script>
+<script src="../static/ace-admin/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../static/ace-admin/js/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="../static/ace-admin/js/plugins/bootstrapValidator/bootstrapValidator.min.js"></script>
+<script src="../static/ace-admin/js/moment-with-locales.min.js"></script>
+<script src="../static/ace-admin/js/bootstrap-datetimepicker.min.js"></script>
+<script src="../static/ace-admin/js/fileinput.js"></script>
+<script src="../static/ace-admin/js/fileinput.min.js"></script>
+
+<script src="../static/ace-admin/js/manager/proContentManagement.js"></script>
+<!--<script src="../static/ace-admin/js/manager/contentAddPartsManagement.js"></script>-->
+</html>

@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="commons/header :: common">
+		<link rel="shortcut icon" href="../static/ace-admin/images/avatars/yb.png" type="image/x-icon" />
+        <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<style type="text/css">
+
+           .J_menuTab{
+			   text-decoration:none;
+		   }
+			.content {
+				background-color: #cc85d9;
+				width: 100%;
+				position: absolute;
+				top: 50px;
+				bottom: 0px;
+				left: 0px;
+			}
+			.tab-content {
+				border: none;
+				padding: 1px 0px;
+			}
+
+			.page-content{
+			padding: 1px 1px;
+			}
+
+
+			#menu_li_0 {
+				display: none;
+			}
+			#menu_nav_0 a.active{
+				z-index: 10;
+
+			}
+			.roll-right.J_tabRight {
+				right: 140px;
+			}
+			.roll-right.J_tabRight {
+				right: 140px;
+			}
+
+			.roll-right.btn-group {
+				right: 60px;
+				width: 80px;
+				padding: 0;
+			}
+
+			.roll-right.btn-group button {
+				width: 80px;
+			}
+
+			.roll-right.J_tabExit {
+				background: #fff;
+				height: 40px;
+				width: 60px;
+				outline: none;
+			}
+		</style>
+	</head>
+	<!--background-image: url('../static/ace-admin/images/avatars/login_bj.jpg')-->
+	<body class="no-skin fixed-sidebar row full-height-layout " style="margin-right: 1%;margin-left: 1%;overflow-x: hidden;">
+	    <!-- 导航栏 start		-->
+		<div th:include="commons/navbar :: common"></div>
+        <div class="row">
+		<!-- 导航栏 end -->
+			 <div id="sidebar" class=" responsive ace-save-state col-sm-2" style="z-index: 10;background-color:#E4E6E9">
+					<script type="text/javascript">
+						try{ace.settings.loadState('sidebar')}catch(e){}
+					</script>
+					<ul class="nav nav-list"  id="ide-menu"  >
+                       <li  id="menu_li_0" class="nav-list">
+					   <a href="/user/toHome"  class="J_menuItem "  >
+						   <i class="icon-cog"></i>
+						   <large th:text="首页" style="font-size: large; text-align: center;color: black"></large>
+						   <b class="arrow icon-angle-down"></b>
+					   </a>
+				        </li>
+						<ul th:each="modular,userStat:${session.user.modulars}" class="nav nav-list  ">
+
+						<li  th:id="${modular.modular_id}" >
+
+							 <a th:name="${modular.modular_id}" href="#"  onclick="clickOpenandClose(name)">
+								<i class="icon-cog"></i>
+								<small th:text="${modular.modular_name}" style="font-size: large; text-align: center;color: black" class="nav-label"></small>
+								<b class="arrow icon-angle-down"></b>
+							 </a>
+
+							<ul  th:each="per,userStat:${session.user.permission}"  >
+								<ul  class=" nav nav-second-level collapse" th:if="${per.permission_parent==0 and per.modular_id==modular.modular_id}">
+								<li  th:id="${'menu_'+per.permission_id}">
+									<a  th:href="${per.permission_action}" class="J_menuItem"   >
+										<i class="icon-cog"></i>
+										<small th:text="${per.permission_name}" style="font-size: large; text-align: center;color: black"></small>
+										<b class="arrow icon-angle-down"></b>
+									</a>
+								</li>
+								</ul>
+							</ul>
+
+
+						</li>
+						</ul>
+					</ul><!-- /.nav-list -->
+
+						<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+							<i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+						</div>
+					</div>
+
+			<!--- 左边栏-菜单 end -->
+
+			<!--- 内容主体 start -->
+			<!--右侧部分开始-->
+			<div id="page-wrapper" class="col-sm-10"  >
+				<div class="content-tabs  ">
+					<button class="roll-nav roll-left J_tabLeft" style="z-index: 20;float:left;margin-left: -10px"><i class="fa fa-backward"></i>
+					</button>
+					<nav class="page-tabs J_menuTabs " style="z-index: 0;width: 10000px;font-size: 20px;height: 30px;">
+						<div class="page-tabs-content" id="menu_nav_0" style="float: left">
+							<a href="#"  class="active J_menuTab  " id="menu_nav_1" data-id="/user/toHome" style="background-color: rgba(210,209,208,0.84);text-decoration:none;padding-left: 4px;padding-right: 4px">首页</a>
+						</div>
+					</nav>
+					<div style="z-index:999;right: 0px;position: absolute;top: 0px">
+					<button class="roll-nav roll-righ J_tabRight " style=""><i class="fa fa-forward" ></i>
+					</button>
+					<div class="btn-group roll-nav roll-right" id="J_tabClose" >
+						<button class="dropdown J_tabClose" data-toggle="dropdown">关闭操作<span class="caret"></span>
+						</button>
+						<ul role="menu" class="dropdown-menu dropdown-menu-right">
+
+
+							<li class="J_tabCloseAll"><a>关闭全部选项卡</a>
+							</li>
+							<li class="divider"></li>
+							<li class="J_tabCloseOther"><a>关闭其他选项卡</a>
+							</li>
+						</ul>
+					</div>
+					</div>
+
+				</div>
+				<div class="row J_mainContent" id="content-main" style="height: 100%">
+					<iframe class="J_iframe " name="iframe0" width="100%" height="100%" src="/user/toHome" frameborder="0" data-id="/user/toHome" seamless></iframe>
+				</div>
+            </div>
+			<!--右侧部分结束-->
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+		<!--[if !IE]> -->
+		<script src="../static/ace-admin/js/jquery-2.1.4.min.js"></script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<script src="../static/ace-admin/js/jquery-1.11.3.min.js"></script>
+<![endif]-->
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='${pageContext.request.contextPath }/libs/ace-admin/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+		<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+
+		<!-- page specific plugin scripts -->
+
+		<script src="../static/ace-admin/js/bootstrap-tab.js"></script>
+		<script src="../static/ace-admin/js/typeahead-bs2.min.js"></script>
+
+		<script src="../static/ace-admin/js/jquery.min.js"></script>
+		<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+		<script src="../static/ace-admin/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../static/ace-admin/js/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../static/ace-admin/js/plugins/bootstrapValidator/bootstrapValidator.min.js"></script>
+		<script src="../static/ace-admin/js/manager/jquery.metisMenu.js"></script>
+		<script src="../static/ace-admin/js/manager/jquery.slimscroll.min.js"></script>
+		<script src="../static/ace-admin/js/manager/hplus.js"></script>
+		<script src="../static/ace-admin/js/manager/contabs.js"></script>
+		<script src="../static/ace-admin/js/manager/pace.min.js"></script>
+
+
+		<!-- inline scripts related to this page -->
+		<section>
+			<script>
+              function top_menu() {
+                   var user=$('#usermessage')
+                   if(user.hasClass('open')){
+                       user.removeClass('open')
+                       $('#usermessage a').attr("aria-expanded","flase")
+                   }else {
+                       user.addClass('open')
+                       $('#usermessage a').attr("aria-expanded","true")
+                   }
+               }
+                function clickOpenandClose(id) {
+
+
+                    var open=$('#'+id)
+                        if (open.hasClass('active')){
+                               open.removeClass("active")
+                            $('#'+id+' .nav').removeClass("in")
+                            $('#'+id+' .nav').attr("aria-expanded","flase")
+						}else{
+                            open.addClass("active")
+                            $('#'+id+' .nav').addClass("in")
+
+                            $('#'+id+' .nav').attr("aria-expanded","true")
+						}
+                }
+               $('#J_tabClose').click(function () {
+                   var J_tabClose=$('#J_tabClose')
+				    if(J_tabClose.hasClass('open')){
+                        J_tabClose.removeClass('open')
+                        $('#J_tabClose .button').attr("aria-expanded","flase")
+					}else {
+                        J_tabClose.addClass('open')
+                        $('#J_tabClose .button').attr("aria-expanded","true")
+					}
+               })
+                $('#usermessage').click(function () {
+                    var user=$('#usermessage')
+
+                    if(user.hasClass('open')){
+
+                        user.removeClass('open')
+                        $('#usermessage a').attr("aria-expanded","flase")
+                    }else {
+                        user.addClass('open')
+                        $('#usermessage a').attr("aria-expanded","true")
+                    }
+
+                })
+                function aaa() {
+					$('#menu_nav_1').remove()
+                }
+                $(function () {
+                    var h=window.screen.availHeight-200
+                    $("#page-wrapper").attr("style","height:"+h+"px")
+
+                })
+			</script>
+		</section>
+		<!--<script type="text/javascript">
+			$(window).resize(function() {
+			  	$("#sidebar"userEntityight($(window).height()-$("#navbar").height());
+			  	$("div .tab-pane iframe").height($("#sidebar").height()-60);
+			});
+
+		user
+
+
+
+Entityunction () {
+					$("#sidebar").height($userEntitydow).height()-$("#navbar").height()-40);
+userEntity	   $('#menu').sidebarMenu({
+				    data: [{
+				     id: '0',
+				     text: '首页',
+				 userEntityicon: 'icon-cog',
+				     url: '',
+				     menus: [{
+				      id: '00',
+				      text: '首页',
+				      icon: 'icon-glass',
+				      close: false,
+				      url: ''
+				     }]
+				    },
+
+				   // <c:forEach varStatus="stauts" var="modular" items="${sessionScope.user.modulars }">
+				    {
+				     id: '${user.modulars.modularId}',
+				     text: '${user.modulars.modularName}',
+				     icon: 'icon-cog',
+				     url: '',
+				     status: '${user.modulars.modularDefaultStatus}' ,
+
+
+				     menus: [
+				    //  <c:forEach varStatus="innerStauts" var="permission" items="${sessionScope.user.permissions }">
+				    //  <c:if test="${permission.permission_parent==0 and permission.modular_id==modular.modular_id }">
+				     {
+				      id: '1000${permission.permission_id}',
+				      text: '${permission.permission_name}',
+				      icon: 'icon-glass',
+				      url: '${pageContext.request.contextPath }${permission.permission_action}'
+				     }
+
+				     //<c:if test="${!innerStauts.last}">
+					    ,
+					 //</c:if>
+					 //</c:if>
+				 	//</c:forEach>
+				     ]
+				    }
+
+				    //<c:if test="${!stauts.last}">
+				    ,
+				    //</c:if>
+					//</c:forEach>
+				    ]});
+				   debugger;
+				   eval($("#menu_li_00 a").attr("href"));
+			  });
+
+		</script>-->
+	</body>
+</html>

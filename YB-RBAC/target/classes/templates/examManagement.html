@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+	<title></title>
+	<link href="../static/ace-admin/css/bootstrap.min.css" rel="stylesheet"/>
+	<link href="../static/ace-admin/css/bootstrap-table.min.css" rel="stylesheet"/>
+	<link href="../static/ace-admin/css/animate.min.css" rel="stylesheet"/>
+	<link href="../static/ace-admin/css/font-awesome.min.css" rel="stylesheet"/>
+	<link rel="stylesheet" href="../static/ace-admin/css/plugins/bootstrapValidator/bootstrapValidator.min.css"/>
+	<link rel="stylesheet" href="../static/ace-admin/css/style.min.css" />
+	<link rel="stylesheet" href="../static/ace-admin/css/exam.css" />
+	<style>
+		.back:hover{cursor: pointer;}
+		.fixed-table-toolbar .btn-group>.btn-group:last-child>.btn {
+			border-top-right-radius: 0px;
+			border-bottom-right-radius: 0px;
+		}
+		label{width:100px;}
+		.popup_de{
+			background-color:rgba(0,0,0,0.3);
+			width:100%;
+			height: 100%;
+			position:fixed;
+			z-index:999;
+			top:0;
+			left:0;
+			display:none;
+		}
+
+		.bbox{
+			display: -webkit-box;   /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+			display: -moz-box;      /* 老版本语法: Firefox (buggy) */
+			display: -ms-flexbox;   /* 混合版本语法: IE 10 */
+			display: -webkit-flex;  /* 新版本语法: Chrome 21+ */
+			display: -moz-flex;
+			display: flex;          /* 新版本语法: Opera 12.1, Firefox 22+ */
+		}
+		.bbox.xycenter{
+			-moz-box-pack: center; /*Firefox*/
+			-webkit-box-pack: center; /*Safari,Opera,Chrome*/
+			box-pack: center;
+			-moz-justify-content: center;
+			-webkit-justify-content: center;
+			justify-content: center;
+			-moz-box-align: center; /*Firefox*/
+			-webkit-box-align:center; /*Safari,Opera,Chrome*/
+			box-align: center;
+			-moz-align-items: center;
+			-webkit-align-items: center;
+			align-items:center;
+		}
+		.popup_de .popup_box{
+			width:300px;
+			height:180px;
+			font-family: '微软雅黑';
+			background-color: #fff;
+			border-radius:5px;
+			color:#333;
+		}
+		.popup_de .popup_btn{
+			display: inline-block;
+			width:100px;
+			height:30px;
+			border-radius: 3px;
+			border:1px solid #1ab394;
+			font-size:15px;
+			text-align: center;
+			line-height: 30px;
+			margin-right:15px;
+			cursor: pointer;
+		}
+		.popup_de .show_msg{
+			display: block;
+			width:100%;
+			text-align: center;
+			font-size:15px;
+			margin-top:30px;
+			margin-bottom: 15px;
+			padding:10px;
+		}
+		.popup_de .popup_close{
+			width:30px;
+			height:30px;
+			font-size:25px;
+			text-align: center;
+			display: inline-block;
+			cursor:pointer;
+			float: right;
+			border-top-right-radius: 5px;
+			line-height:30px;
+		}
+		.popup_de .popup_close:hover{
+			background-color: #1ab394;
+			color:#fff;
+		}
+		.popup_de .btn_submit{
+			background-color: #1ab394;
+			color:#fff;
+		}
+		.popup_de .btn_box{
+			text-align: center;
+		}
+
+	</style>
+
+</head>
+<body>
+<div class="tableBody">
+	<nav class="navbar navbar-inverse " role="navigation">
+		<div class="container-fluid">
+			<div >
+				<ul class="nav navbar-nav" style="font-size: 16px">
+					<li class="active"><a href="/examPage">考试任务</a></li>
+					<li ><a href="/stuScorePage">学生成绩</a></li>
+					<li ><a href="/expireTestPage">逾期试卷</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div style="width: 95%; margin:0 auto;font-size: 16px;">
+		<div>
+			<h3 style="color: fuchsia">欢迎进入学生考试系统</h3>
+			<p style="color: #0092ef;font-size: 15px"> 你有以下考试等待完成，请在规定期限内完成考试！每项试卷均有<span style="color: red;font-weight: bolder;font-size: 18px">【2次】</span>考试机会！如有疑问，请及时咨询老师！</p>
+			<p style="color: #0092ef;font-size: 15px"> 点击&nbsp;<button class="btn btn-danger">开始考试</button>&nbsp;按钮后，请勿离开考试界面，不能进行其他操作，否则考试无效！</p>
+		</div>
+		<table id="mytab" class="table table-hover"></table>
+	</div>
+	<div id="toolbar" class="btn-group pull-right" style="margin-right: 20px; margin-top: 10px;">
+		<button id="btn_exam" type="button" class="btn btn-danger" style="display: none">
+			<span class="glyphicon glyphicon-edit" aria-hidden="true" ></span>&nbsp;&nbsp;开始考试
+		</button>
+	</div>
+</div>
+
+
+<div class="changeBody" style="width:98%; height:40%; display: none;position: absolute;top:10px;margin: 0 auto;margin-left: 30px">
+
+	<div class="col-sm-12" style="width:100%;border:1px solid #7399b8">
+		<div class="ibox float-e-margins" >
+			<div class="ibox-title" style="text-align:center">
+				<h1 style="font-weight: bolder" id="testTitle"></h1>
+			</div>
+			<div class="ibox-content">
+				<div class="form-group" style="width: 100%">
+					<label class="col-sm-2 control-label" style="width: 80px;font-size: 16px;margin-left: 50px">科目:</label>
+					<div class="col-sm-2" style=" float: left;width: 25%">
+						<span id="subName" style="font-size: 14px"></span>
+					</div>
+					<label class="col-sm-2 control-label" style=" float: left;width: 80px;font-size: 16px" >时间：</label>
+					<div class="col-sm-10" style=" float: left;width:25%">
+						<span id="testTime" style="font-size: 14px;color: red"></span>
+					</div>
+					<label class="col-sm-2 control-label" style=" float: left;width: 80px;font-size: 16px" >总分：</label>
+					<div class="col-sm-2" style=" float: left;width: 20%">
+						<span id="totalScore" style="font-size: 14px"></span>
+					</div>
+				</div>
+				<div id="test">
+					<div class="exam">
+						<div style="width: 100%;height:auto;display: inline-block;border: 1px solid white;position: relative;margin-top:10px;">
+							<div style="width: 100%;">
+								<div style="width: 98%;margin: 0px auto">
+									<div style="width: 100%;height:100px;border: 1px solid #CCC;border-bottom:none;background:#FFF;">
+										<div class="middle-top" style="width: 100%;height: 50px;border-bottom: 1px solid #CCC;background:#2D3339; position:relative;">
+											<div class="middle-top-left pull-left"
+												 style="height: 100%;padding-left: 20px;;background:#232C31;color:#FFF;">
+												<div class="text-center pull-left progress-left"
+													 style="border: 1px solid #A2C69A;background:#FFF;border-radius:10px;line-height:20px;height:20px;margin:15px 0px 15px 0px;font-size: 11px;position:relative;">
+													<div class="progress pull-left"
+														 style="background: #609E53;width: 0px;height:18px;position:absolute;left: 0px;"></div>
+													<div class="pro-text" style="left: 0px;color: #609E53;position:absolute;top:0px;width:100%;"> 已完成<span class="progres"></span></div>
+												</div>
+												<div class="pull-left" style=" width:135px;line-height:20px;height:20px;margin:15px;font-size:15px;">
+													当前第<span class="questioned"></span>题/共<span class="question_sum"></span>题 </div>
+											</div>
+											<div class="middle-top-right text-center pull-left"
+												 style="width:160px; height: 100%;border-left: 1px solid red;position: absolute;right: 0px;">
+												<div class="stop pull-left" style="width: 50px; height: 100%;padding: 10px;"> <a href="javascript:void(0);" class="text-center" style="color: #FE6547;">
+													<div class="glyphicon glyphicon-time"
+														 style="width:30px;height: 30px;line-height:30px;border-radius:15px;border: 1px solid #FE6547;" aria-hidden="true"></div>
+												</a> </div>
+												<div class="pull-left"  style="width: 100px; height: 100%;padding: 10px 0px 10px 0px;">
+													<div id="RemainingTime" style="width:100px;height: 30px;line-height:30px; border-radius:15px;font-size:20px;color:#FFF;"> </div>
+												</div>
+											</div>
+										</div>
+										<div style="width: 100%;height: 50px;font-size:15px;color: #000;line-height: 50px;padding-left: 20px;">
+											<div style="color:#FFF;background: red;width: 22px;height: 22px;border-radius:11px;line-height:22px;font-size:15px; text-align: center;"
+												 class="glyphicon glyphicon-map-marker"></div>
+											[请作答]<span style="color: red;font-size: 13px">（<span style="font-weight: bolder">提示：</span>考试进行时请勿离开考试页面，扫码时请将鼠标选中答案输入框，最后一道题请点击<button class="btn btn-success">确定</button>按钮，再进行提交试卷，否则该题答案无效！）</span> </div>
+									</div>
+									<div style="width: 100%;height:auto;display: inline-block;border: 1px solid #CCC;border-bottom:1px dashed #CCC;background:#FFF;">
+										<div style="width: 100%;height: 100%;padding:30px 30px 0px 30px;font-size: 16px">
+											<ul class="list-unstyled question" id="" name="" style="margin-left: 30px;height: 350px">
+												<li class="question_title"></li>
+											</ul>
+											<div class="operation" style="margin-top: 20px;">
+												<div class="text-right" style="margin-right: 20px;">
+													<div class="form-group" style="color: #FFF;">
+
+														<button class="btn btn-info" id="nextQuestion">下一题</button>
+														&nbsp;&nbsp;&nbsp;
+														<button class="btn btn-warning" id="submitQuestions" style="float: right;margin-right: 40px">提交试卷</button>
+														<button class="btn btn-success" id="sureAnswer" style="display: none;float: right;margin-right: 20px">确定</button>
+
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div style="width: 100%;height:auto;display: inline-block;border: 1px solid #CCC;border-top:none;background:#FFF;">
+										<div style="width: 100%;padding:20px;">
+											<div class="panel-default">
+												<div class="panel-heading" id="closeCard" style="color: #DCE4EC;font-size: 15px;display: none;background: none;">
+													<span>收起答题卡</span> <span class="glyphicon glyphicon-chevron-up"></span> </div>
+												<div class="panel-heading" id="openCard" style="font-size: 15px;background: none;"> <span>展开答题卡</span> <span class="glyphicon glyphicon-chevron-down"></span> </div>
+												<div id="answerCard" style="display: none;">
+													<div class="panel-body form-horizontal" style="padding: 0px;">
+														<ul class="list-unstyled" id="navlist">
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="popup_de xycenter">
+	<div class="popup_box">
+		<span class="popup_close" value="关闭">×</span>
+		<span class="show_msg">确定要删除该权限吗？</span>
+		<div class="btn_box">
+			<div class="popup_btn btn_submit" value="确定">确定</div>
+			<div class="popup_btn btn_cancel" value="取消">取消</div>
+		</div>
+	</div>
+</div>
+</body>
+<script src="../static/ace-admin/js/jquery.min.js"></script>
+<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+<script src="../static/ace-admin/js/layer/layer.js"></script>
+<script src="../static/ace-admin/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../static/ace-admin/js/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="../static/ace-admin/js/plugins/bootstrapValidator/bootstrapValidator.min.js"></script>
+<script src="../static/ace-admin/js/moment-with-locales.min.js"></script>
+<script src="../static/ace-admin/js/bootstrap-datetimepicker.min.js"></script>
+<script src="../static/ace-admin/js/fileinput.js"></script>
+<script src="../static/ace-admin/js/fileinput.min.js"></script>
+<script src="../static/ace-admin/js/manager/examManagement.js"></script>
+</html>

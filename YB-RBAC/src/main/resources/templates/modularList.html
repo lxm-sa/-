@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+       xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="commons/header :: common"></head>
+</head>
+
+<body class="no-skin">
+
+
+<div class="main-container ace-save-state" id="main-container">
+    <script type="text/javascript">
+        try{ace.settings.loadState('main-container')}catch(e){}
+    </script>
+
+
+    <!--- 内容主体 start -->
+    <div class="main-content">
+        <div class="main-content-inner">
+            <!-- 内容页 start -->
+            <div class="page-content">
+                <div class="widget-box transparent" id="widget-box-13">
+                    <div class="widget-header">
+                        <h4 class="widget-title lighter">模块管理</h4>
+
+                        <div class="widget-toolbar no-border">
+                            <ul class="nav nav-tabs" id="myTab2">
+                                <li >
+                                    <shiro:hasPermission name="modular:to_add">
+                                        <a data-toggle="tab" href="javascript:void(0)" onclick="window.location.href='/modular/toModularAdd'">增加</a>
+                                    </shiro:hasPermission>
+
+                                </li>
+
+
+
+                                <li class="active">
+                                    <a data-toggle="tab" href="#modularList">列表</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="widget-main padding-12 no-padding-left no-padding-right">
+                            <div class="tab-content padding-4">
+                                <div id="modularList" class="tab-pane in active">
+                                    <div class="row">
+                                        <div class="col-sm-10" style="height: 40px">
+                                            <shiro:hasPermission name="modular:deleteIds">
+
+                                                <button id="btnDeleteCheckModular" class="btn btn-primary">删除勾选用户</button>
+
+                                            </shiro:hasPermission>
+                                        </div>
+                                        <div class="nav-search col-sm-2" id="nav-search" >
+                                            <form class="form-search" action="/modular/selectModular_name">
+								                       <span class="input-icon">
+									                     <input type="text" name="modular_name" placeholder="权限名..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+									                     <i class="ace-icon fa fa-search nav-search-icon"></i>
+								                     </span>
+                                            </form>
+                                        </div><!-- /.nav-search -->
+                                    </div>
+                                    <table class="table table-striped table-bordered align-center ">
+                                        <tr class="bolder" >
+                                            <td><input   id="chkAllModular" type="checkbox"></td>
+                                            <td>编号</td>
+                                            <td>模块名</td>
+                                            <td>排序</td>
+                                            <td>默认状态</td>
+                                            <shiro:hasPermission name="modular:delete or modular:to_edit">
+                                                <td>操作</td>
+                                            </shiro:hasPermission>
+                                        </tr>
+                                            <tr th:each="modular,modularstart:${modularList}">
+                                                <td><input name="modularId" th:value="${modular.modular_id }" type="checkbox"></td>
+                                                <td>[[${modular.modular_id }]]</td>
+                                                <td>[[${modular.modular_name }]]</td>
+                                                <td>[[${modular.order_number }]]</td>
+                                                <td>[[${modular.modular_default_status }]]</td>
+                                                <shiro:hasPermission name="modular:delete or modular:to_edit">
+                                                    <td>
+                                                        <shiro:hasPermission name="modular:to_edit">
+                                                            <button class="btn btn-minier btn-white btn-info" ><a  style="text-decoration:none;" target="_self" th:href="'/modular/toModularEdit?modular_id='+${modular.modular_id}">&nbsp;编&nbsp;辑&nbsp;</a></button>
+                                                        </shiro:hasPermission>
+                                                        &nbsp;&nbsp;
+                                                        <shiro:hasPermission name="modular:delete">
+                                                            <button class="btn btn-minier btn-white btn-info" ><a  style="text-decoration:none;" target="_self" th:href="'/modular/toModularDeleteById?modular_id='+${modular.modular_id}">&nbsp;删&nbsp;除&nbsp;</a></button>
+                                                        </shiro:hasPermission>
+                                                    </td>
+                                                </shiro:hasPermission>
+                                            </tr>
+
+
+
+                                    </table>
+                                    <nav style="float: right;margin-outside: 90%">
+                                        <ul class="pagination" style="margin-top: 0px;margin-bottom: 0px">
+                                            <li th:if="${index>1}">
+                                                <a th:href="'/permission/toPermissionList?index='+${index-1}"  aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <li class="disabled" th:if="${index==1}">
+                                                <a href="#" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+
+                                            <li th:if="${count<10}" th:each="i,start:${#numbers.sequence(1,count)}">
+                                                <a  th:if="${index==i}" href="#" class="active" style="background-color: #8AB2C9"><span th:width="20px"  >[[${i}]]</span></a>
+                                                <a th:if="${index!=i}" th:href="'/permission/toPermissionList?index='+${i}"><span th:width="20px"  >[[${i}]]</span></a>
+                                            </li>
+                                            <li th:if="${count>=10}" th:each="i,start:${#numbers.sequence(index-4,index+5)}">
+                                                <a  th:if="${index==i}" href="#" class="active" style="background-color: #8AB2C9"><span th:width="20px"  >[[${i}]]</span></a>
+                                                <a th:if="${index!=i}" th:href="'/permission/toPermissionList?index='+${i}"><span th:width="20px"  >[[${i}]]</span></a>
+                                            </li>
+                                            <li th:if="${index!=count}">
+                                                <a th:href="'/permission/toPermissionList?index='+${index+1}" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                            <li class="disabled" th:if="${index==count}">
+
+                                                <a href="#" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.page-content -->
+            <!-- 内容页 end -->
+        </div>
+    </div><!-- /.main-content -->
+    <!--- 内容主体 end -->
+
+    <!--页尾 start -->
+
+    <!--页尾 end -->
+</div><!-- /.main-container -->
+
+<script src="../static/ace-admin/js/jquery.min.js"></script>
+<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+<script src="../static/ace-admin/js/layer/laydate/laydate.js"></script>
+<script src="../static/ace-admin/js/layer/layer.min.js"></script>
+<!-- inline scripts related to this page -->
+<section>
+<script th:inline="javascript" type="text/javascript">
+    $(function () {
+        var msg1 = [[${msg1}]];
+        var msg2 = [[${msg2}]];
+        if (msg1 != null) {
+            layer.msg(msg1, {
+                time: 0,//不自动关闭
+                icon: 6,
+                btn: ['确定', '取消'],
+                yes: function (index) {
+                    layer.close(index);
+                    location.href = "/modular/toModularList"
+                }
+            });
+        }
+        if (msg2 != null) {
+            layer.alert('内容')
+
+            layer.alert(msg2, {
+                icon: 5,
+                skin: 'layer-ext-moon',
+            })
+
+        }
+    })
+    //复选框的全选，反选
+    $("#chkAllModular").click(function(){
+        //当前绑定的控件选中，其他复选框全部选中，否则全部反选
+        if($(this).prop("checked")==true){
+            $("input[name='modularId']").prop("checked",true);
+        }else{
+            $("input[name='modularId']").prop("checked",false);
+        }
+    });
+    //将选择的记录发送的后台删除
+    $("#btnDeleteCheckModular").click(function(){
+        //获得全选中的复选框的值
+        var chk=$("input[name='modularId']:checked");
+
+        //发送选择的控件的值到后台
+        location.href="/modular/deleteCheckModulars?"+chk.serialize();
+    });
+
+</script>
+</section>
+</body>
+</html>

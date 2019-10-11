@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head th:include="commons/header :: common"></head>
+	<body class="no-skin" >
+        <div class="main-container ace-save-state" id="main-container" style="margin-bottom: 0px">
+					<!-- 内容页 start -->
+					<div class="page-content" style="margin-bottom: 0px">
+				          			<div class="widget-box transparent" id="widget-box-12">
+												<div class="widget-header">
+													<h4 class="widget-title lighter"><a href="/testScores/to_list">成绩管理</a><b>》</b>易错题汇总</h4>
+
+													<div class="widget-toolbar no-border">
+														<ul class="nav nav-tabs" id="myTab2" >
+															<li class="active">
+																<a data-toggle="tab" href="#roleList">列表</a>
+															</li>
+														</ul>
+													</div>
+												</div>
+
+												<div class="widget-body">
+													<div class="widget-main padding-12 no-padding-left no-padding-right">
+														<div class="tab-content padding-4">
+																 <table class="table table-striped table-bordered align-center "> 
+																    <tr class="bolder" >
+																	  <td>序号</td>
+																	  <td>题目名称</td>
+																		<td>类别</td>
+																	  <td>正确答案</td>
+																		<td>错误率</td>
+																		<td>总答题数</td>
+																	</tr>
+																	 <tr class="table1" th:each="list,liststart:${list}">
+																	  <td>[[${liststart.index+1}]]</td>
+																	  <td>[[${list.title_content }]]</td>
+																		 <td>[[${list.title_type_name}]]</td>
+																		 <td>[[${list.part_name }]]</td>
+																		 <td>[[${list.rate}]]</td>
+																		 <td>[[${list.count1}]]</td>
+                                                                      </tr>
+                                                                   </table>
+                                              <nav style="float: right;margin-outside: 90%">
+                                                  <ul class="pagination" style="margin-top: 0px;margin-bottom: 0px">
+                                                      <li th:if="${index>1}">
+                                                          <a th:href="'/testScores/to_erorrList?index='+${index-1}"  aria-label="Previous">
+                                                              <span aria-hidden="true">&laquo;</span>
+                                                          </a>
+                                                      </li>
+                                                      <li class="disabled" th:if="${index==1}">
+                                                          <a href="#" aria-label="Previous">
+                                                              <span aria-hidden="true">&laquo;</span>
+                                                          </a>
+                                                      </li>
+
+                                                      <li th:if="${count<10}" th:each="i,start:${#numbers.sequence(1,count)}">
+                                                          <a  th:if="${index==i}" href="#" class="active" style="background-color: #8AB2C9"><span th:width="20px"  >[[${i}]]</span></a>
+                                                          <a th:if="${index!=i}" th:href="'/testScores/to_erorrList?index='+${i}"><span th:width="20px"  >[[${i}]]</span></a>
+                                                      </li>
+                                                      <li th:if="${count>=10}" th:each="i,start:${#numbers.sequence(index-4,index+5)}">
+                                                          <a  th:if="${index==i}" href="#" class="active" style="background-color: #8AB2C9"><span th:width="20px"  >[[${i}]]</span></a>
+                                                          <a th:if="${index!=i}" th:href="'/testScores/to_erorrList?index='+${i}"><span th:width="20px"  >[[${i}]]</span></a>
+                                                      </li>
+                                                      <li th:if="${index!=count}">
+                                                          <a th:href="'/testScores/to_erorrList?index='+${index+1}" aria-label="Next">
+                                                              <span aria-hidden="true">&raquo;</span>
+                                                          </a>
+                                                      </li>
+                                                      <li class="disabled" th:if="${index==count}">
+
+                                                          <a href="#" aria-label="Next">
+                                                                  <span aria-hidden="true">&raquo;</span>
+                                                          </a>
+                                                      </li>
+                                                  </ul>
+                                              </nav>
+                              </div>
+                          </div>
+                      </div><!-- /.page-content -->
+					<!-- 内容页 end -->
+				</div>
+			</div><!-- /.main-content -->
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+
+		<script src="../static/ace-admin/js/jquery.min.js"></script>
+		<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+		<script src="../static/ace-admin/js/layer/laydate/laydate.js"></script>
+		<script src="../static/ace-admin/js/layer/layer.min.js"></script>
+<section>
+	<script>
+        var navbar=window.parent.$("#navbar").outerHeight()
+        var content=window.parent.$(".content-tabs").outerHeight()
+        var widgetheader=$(".widget-header").outerHeight()+100
+        var h=(window.innerHeight-content-widgetheader)/8
+        $(".table1").attr("style","height:"+h+"px;")
+        $(".table1").children().attr("style","vertical-align: middle")
+	</script>
+</section>
+	</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+                               xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="commons/header :: common"></head>
+<meta charset="UTF-8">
+<title>部件信息展示</title>
+</head>
+<body style="background-color: white;">
+<div class="widget-header row">
+    <diV class="col-sm-4">
+       <h4 class="widget-title lighter">部件学习</h4>
+    </div>
+    <div class=" col-sm-2" id="nav-search" th:if="${data!=0}">
+        <form class="form-search" onsubmit="return test();" action="/study/selelctPartShow?data=2">
+				<span class="input-icon">
+                    <input type="hidden" name="data" value="1"  />
+				<input type="text" name="barcode_id" placeholder="将鼠标放入..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+				<i class="ace-icon fa fa-search nav-search-icon"></i>
+			</span>
+        </form>
+    </div><!-- /.nav-search -->
+    <div class="widget-toolbar no-border" th:if="${data==0}">
+        <ul class="nav nav-tabs" id="myTab2">
+            <li  class="active">
+                <a data-toggle="tab" href="#powerAdd">详情</a>
+            </li>
+            <li>
+                <a  th:href="'/learningRate/noLearning?user_id='+${session.user.user.user_id}">列表</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div id="text">
+<div  class="row" >
+    <div class="col-sm-6"style="font-size: 20px;line-height: 40px;margin-top: 20px;background-color: white;">
+        <div ><span style="margin-left: 5%;border: 2px dashed #e7eaec;"><b>部件名称</b>: </span><span style="font-size: 16px">[[${map.part.part_name}]]</span></div>
+        <div ><span  style="margin-left: 5%;border: 2px dashed #e7eaec;"><b>部件数量</b>: </span><span style="font-size: 16px"> [[${map.part.part_number}]]</span></div>
+        <div th:if="${map.part.part_spec!=''} and ${map.part.part_spec!=null}" ><span  style="margin-left: 5%;border: 2px dashed #e7eaec;"><b>规格型号</b>: </span><span style="font-size: 16px">[[${map.part.part_spec}]]</span></div>
+        <div th:if=" ${map.list.size()>0}">
+            <div  ><span style="background-color: white;margin-left:5%;font-size: 20px;border: 2px dashed #e7eaec;"><b>可能产生的危险</b>：</span></div>
+            <div th:each="list,liststart:${map.list}">
+                <div style="font-size: 16px;margin-left:5%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>[[${list.pro_name}]]:</b>[[${list.content_name}]]</div>
+            </div>
+        </div>
+        <div th:if="${map.part.part_present!=''} and ${map.part.part_present!=null}">
+            <div ><span style="background-color: white;margin-left:5%;font-size: 20px;border: 2px dashed #e7eaec;"><b>部件作用</b>：</span></div>
+            <div th:each="str,strstart:${map.str}">
+                <div style="font-size: 16px;margin-left:5%;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${str}]]</div>
+            </div>
+        </div>
+        <div th:if="${map.part.part_principle!=''}and ${map.part.part_principle!=null}">
+            <div ><span style="background-color: white;margin-left:5%;font-size: 20px;border: 2px dashed #e7eaec;"><b>部件原理</b>：</span></div>
+            <div th:each="principle,principlestart:${map.principle}">
+                <div style="font-size: 16px;margin-left:5%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${principle}]]</div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-sm-6" >
+        <div th:if=" ${map.part.part_url!=''}and ${map.part.part_url!=null}">
+        <div><span style="background-color: white;margin-left:5%;font-size: 20px;border: 2px dashed #e7eaec;"><b id="part_url"></b></span></div>
+     <!--<img th:src="${map.part.part_url}">-->
+        <img th:src="'/OTA/'+${map.part.part_url}"style="height: 220px;width: 80%;margin-left: 10%">
+       </div>
+    <div th:if="(${map.part.position_url!='' }and ${map.part.position_url!=null}) or (${map.part.part_position!=''}and ${map.part.part_position!=null})"><span  style="margin-left: 5%;border: 2px  dashed #e7eaec;font-size: 20px;"><b>部件位置</b>: </span><span style="font-size: 16px">[[${map.part.part_position}]]</span></div>
+    <div th:if="${map.part.position_url!=''} and ${map.part.position_url!=null}"><img th:src="'/OTA/'+${map.part.position_url}"style="height: 220px;width: 80%;margin-left: 10%"></div>
+   </div>
+</div>
+</div>
+ <script src="../static/ace-admin/js/jquery.min.js"></script>
+<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+<script src="../static/ace-admin/js/layer/laydate/laydate.js"></script>
+<script src="../static/ace-admin/js/layer/layer.min.js"></script>
+<section>
+    <script th:inline="javascript">
+      function  test() {
+          //停止语音播报
+          window.speechSynthesis.cancel();
+          return true;
+      }
+
+
+        $(function () {
+            var msg=null
+           // window.speechSynthesis.cancel();
+            msg = new SpeechSynthesisUtterance();
+            //msg.rate = 4 播放语速
+            //msg.pitch = 10 音调高低
+            msg.text = $('#text').text()
+            //msg.volume = 0.5 播放音量
+            speechSynthesis.speak(msg);
+            $('#part_url').text("部件结构图：")
+            var msg1 = [[${msg1}]];
+            var msg2 = [[${msg2}]];
+            if(msg1!=null) {
+                layer.msg(msg1, {
+                    time: 0 ,//不自动关闭
+                    icon:6,
+                    btn: ['确定', '取消'],
+                    yes: function(index){
+                        layer.close(index);
+                    }
+                });
+            }
+            if(msg2!=null){
+                layer.alert('内容')
+
+                layer.alert(msg2, {
+                    icon: 5,
+                    skin: 'layer-ext-moon',
+                })
+
+            }
+        })
+      window.onload = function(){
+          $(".nav-search-input").focus()
+      }
+//          $(function () {
+//
+//
+//              var ajax=$.ajax({
+//                  url:'/study/voice',
+//                  dataType: 'json',
+//                  contentType: 'application/json',
+//                  success:function (data) {
+//                  }
+//              })
+//              ajax.abort();
+//          })
+    </script>
+</section>
+</body>
+</html>

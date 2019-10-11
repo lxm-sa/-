@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="commons/header :: common"></head>
+<meta charset="UTF-8">
+<title>试卷</title>
+</head>
+<body>
+<div class="widget-header ">
+    <div>
+        <h4 class="widget-title lighter"><a href="/testScores/to_list">首页</a><b>》</b><a th:href="'/testScores/to_studentList?class_id='+${class_id}+'&test_title='+${test_title}">学生成绩管理</a><b>》</b>学生考试详情</h4>
+    </div>
+    <div class="row">
+       <h2 style="text-align: center">[[${test_title}]]</h2>
+    </div>
+    <div class="row">
+        <div class="col-sm-3" style="margin-left: 20%">姓名:[[${map1.user_name}]]</div>
+        <div class="col-sm-3" >用时:[[${map1.test_time}]]</div>
+        <div class="col-sm-3" >成绩:[[${map1.score}]]</div>
+    </div>
+    <div style="background-color: #aaaaaa;height: 40px;margin-left: 5%;margin-right: 5%"></div>
+    <div style="margin-left: 10%">
+    <div class="row" th:each="list,start:${map.list}">
+        <div th:each="list1,startlist1:${map.list1}" th:if="${list.title_id==list1.title_id}">
+        <div th:if="${list1.status==2}" style="margin-top: 5%">
+            <div class="row" style="font-size: 20px"><i class="fa fa-check" style="color: #00BE67"></i>第[[${start.index+1}]]题.[[${list.title_content}]]。</div>
+        </div>
+        <div th:if="${list1.status!=2}" style="margin-top: 5%">
+            <div class="row" style="font-size: 20px"><i class="fa fa-close" style="color: #e34755"></i>第[[${start.index+1}]]题.[[${list.title_content}]]。</div>
+        </div>
+        <div class="row" style="font-size: 20px;margin-left: 5%;margin-top: 2%">你的答案:[[${list1.part_name}]];
+        </div>
+        <div class="row" style="font-size: 20px;margin-left: 5%;margin-top: 2%">正确答案:[[${list.part_name}]];
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
+<script src="../static/ace-admin/js/jquery.min.js"></script>
+<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+<script src="../static/ace-admin/js/layer/laydate/laydate.js"></script>
+<script src="../static/ace-admin/js/layer/layer.min.js"></script>
+<section>
+    <script th:inline="javascript">
+        //          $(function () {
+        //
+        //
+        //              var ajax=$.ajax({
+        //                  url:'/study/voice',
+        //                  dataType: 'json',
+        //                  contentType: 'application/json',
+        //                  success:function (data) {
+        //                  }
+        //              })
+        //              ajax.abort();
+        //          })
+    </script>
+</section>
+</body>
+</html>

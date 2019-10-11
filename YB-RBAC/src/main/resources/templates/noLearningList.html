@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="commons/header :: common"></head>
+</head>
+
+<body class="no-skin">
+
+
+<div class="main-container ace-save-state" id="main-container">
+    <script type="text/javascript">
+        try{ace.settings.loadState('main-container')}catch(e){}
+    </script>
+
+
+    <!--- 内容主体 start -->
+    <div class="main-content">
+        <div class="main-content-inner">
+            <!-- 内容页 start -->
+            <div class="page-content">
+                <div class="widget-box transparent" id="widget-box-13">
+                    <div class="widget-header">
+                        <h4 class="widget-title lighter"><a href="/learningRate/toLearningRate">学习进度</a>》未学知识</h4>
+
+                        <div class="widget-toolbar no-border">
+                            <ul class="nav nav-tabs" id="myTab2">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#modularList">列表</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="widget-main padding-12 no-padding-left no-padding-right">
+                            <div class="tab-content padding-4">
+                                <div id="modularList" class="tab-pane in active">
+                                    <table class="table table-striped table-bordered align-center ">
+                                        <tr class="bolder" >
+                                            <td>条码编号</td>
+                                            <td>部件名称</td>
+                                            <td>所属科目</td>
+                                            <td>类别</td>
+                                            <shiro:haspermission name="study:selelctPartShow">
+                                            <td>操作</td>
+                                            </shiro:haspermission>
+                                        </tr>
+                                        <tr class="table1" th:each="list,liststart:${list}">
+                                            <td>[[${list.barcode_id }]]</td>
+                                            <td>[[${list.part_name }]]</td>
+                                            <td>[[${list.sub_name }]]</td>
+                                            <td>[[${list.category_name }]]</td>
+                                            <shiro:haspermission name="study:selelctPartShow">
+                                                <td><button class="btn btn-minier btn-white btn-info" ><a  style="text-decoration:none;" target="_self" th:href="'/study/selelctPartShow?barcode_id='+${list.barcode_id}+'&data=0'">查看详情</a></button></td>
+                                            </shiro:haspermission>
+
+                                        </tr>
+
+
+
+                                    </table>
+                                    <nav style="float: right;margin-outside: 90%">
+                                        <ul class="pagination" style="margin-top: 0px;margin-bottom: 0px">
+                                            <li th:if="${index>1}">
+                                                <a th:href="'/learningRate/noLearning?user_id='+${session.user.user.user_id}+'&index='+${index-1}"  aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <li class="disabled" th:if="${index==1}">
+                                                <a href="#" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+
+                                            <li th:if="${count<10}" th:each="i,start:${#numbers.sequence(1,count)}">
+                                                <a  th:if="${index==i}" href="#" class="active" style="background-color: #8AB2C9"><span th:width="20px"  >[[${i}]]</span></a>
+                                                <a th:if="${index!=i}" th:href="'/learningRate/noLearning?user_id='+${session.user.user.user_id}+'&index='+${i}"><span th:width="20px"  >[[${i}]]</span></a>
+                                            </li>
+                                            <li th:if="${count>=10}" th:each="i,start:${#numbers.sequence(index-4,index+5)}">
+                                                <a  th:if="${index==i}" href="#" class="active" style="background-color: #8AB2C9"><span th:width="20px"  >[[${i}]]</span></a>
+                                                <a th:if="${index!=i}" th:href="'/learningRate/noLearning?user_id='+${session.user.user.user_id}+'&index='+${i}"><span th:width="20px"  >[[${i}]]</span></a>
+                                            </li>
+                                            <li th:if="${index!=count}">
+                                                <a th:href="'/learningRate/noLearning?user_id='+${session.user.user.user_id}+'&index='+${index+1}" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                            <li class="disabled" th:if="${index==count}">
+
+                                                <a href="#" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.page-content -->
+            <!-- 内容页 end -->
+        </div>
+    </div><!-- /.main-content -->
+    <!--- 内容主体 end -->
+
+    <!--页尾 start -->
+
+    <!--页尾 end -->
+</div><!-- /.main-container -->
+
+<script src="../static/ace-admin/js/jquery.min.js"></script>
+<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+<script src="../static/ace-admin/js/layer/laydate/laydate.js"></script>
+<script src="../static/ace-admin/js/layer/layer.min.js"></script>
+<!-- inline scripts related to this page -->
+<section>
+    <script th:inline="javascript" type="text/javascript">
+        $(function () {
+            var navbar=window.parent.$("#navbar").outerHeight()
+            var content=window.parent.$(".content-tabs").outerHeight()
+            var widgetheader=$(".widget-header").outerHeight()+100
+            var h=(window.innerHeight-content-widgetheader)/8
+            $(".table1").attr("style","height:"+h+"px;")
+            $(".table1").children().attr("style","vertical-align: middle")
+            window.speechSynthesis.cancel();
+            var msg1 = [[${msg1}]];
+            var msg2 = [[${msg2}]];
+            if (msg1 != null) {
+                layer.msg(msg1, {
+                    time: 0,//不自动关闭
+                    icon: 6,
+                    btn: ['确定', '取消'],
+                    yes: function (index) {
+                        layer.close(index);
+                        location.href = "/modular/toModularList"
+                    }
+                });
+            }
+            if (msg2 != null) {
+                layer.alert('内容')
+
+                layer.alert(msg2, {
+                    icon: 5,
+                    skin: 'layer-ext-moon',
+                })
+
+            }
+        })
+        function  mistakeList() {
+            var type_id=$("#type_id").val();
+            console.log(type_id)
+            location.href="/mistake/toMistakeList?type_id="+type_id
+        }
+
+    </script>
+</section>
+</body>
+</html>

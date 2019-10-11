@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="commons/header :: common">
+    <meta charset="UTF-8">
+    <title>学习进度</title>
+    <link href="../static/ace-admin/css/style.css">
+</head>
+<body class="row" style="overflow-x: hidden;">
+<div class="col-sm-6">
+    <div >
+        <div class="echarts" id="echarts-line-chart" style=" height: 400px;"></div>
+    </div>
+</div>
+<div class="ibox-content col-sm-5" style="margin-top: 100px">
+
+    <h5>学习进度</h5>
+    <h2>[[${map.count}]]%</h2>
+    <div class="progress progress-mini" style="background-color: red">
+        <div th:style="'width:'+${map.count}+'%;' " class="progress-bar"></div>
+    </div>
+    <div class="m-t-sm small">今日[[${map.date}]]更新 </div>
+    <div style="margin-top: 20%;float: right">
+        如果没有学习完！可点击<a th:href="'/learningRate/noLearning?user_id='+${session.user.user.user_id}">查看未学习的知识</a>
+    </div>
+</div>
+<div th:include="commons/footer :: common"></div>
+<!-- ECharts demo data -->
+<script src="../static/ace-admin/js/jquery.min.js"></script>
+<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+<script src="../static/ace-admin/js/manager/echarts-all.js"></script>
+<script src="../static/ace-admin/js/manager/jquery.sparkline.min.js"></script>
+<section>
+<script th:inline="javascript">
+
+    $(function () {
+        var number=[]
+        var time=[]
+        for(var i=0;i<[[${list}]].length;i++){
+            number[i]=[[${list}]][i].count
+            time[i]=[[${list}]][i].create_time
+        }
+        var lineChart = echarts.init(document.getElementById("echarts-line-chart"));
+        var lineoption = {
+            title: {
+                text: '每天学习的新知识'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['日学习量']
+            },
+            grid: {
+                x: 40,
+                x2: 40,
+                y2: 40
+            },
+            calculable: false,
+            xAxis: [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data :time
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    axisLabel: {
+                        formatter: '{value} 个'
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '日学习量',
+                    type: 'line',
+                    data: number,
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: '最大值'}
+                        ]
+                    },
+                    markLine: {
+                        data: [
+                            {type: 'average', name: '平均值'}
+                        ]
+                    }
+                }
+
+            ]
+        };
+        lineChart.setOption(lineoption);
+        $(window).resize(lineChart.resize);
+
+
+    })
+</script>
+</section>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head th:include="commons/header :: common"></head>
+	<body class="no-skin" >
+        <div class="main-container ace-save-state" id="main-container" style="margin-bottom: 0px">
+					<!-- 内容页 start -->
+					<div class="page-content" style="margin-bottom: 0px">
+				          			<div class="widget-box transparent" id="widget-box-12">
+												<div class="widget-header">
+													<h4 class="widget-title lighter">成绩管理</h4>
+
+													<div class="widget-toolbar no-border">
+														<ul class="nav nav-tabs" id="myTab2" >
+															<li class="active">
+																<a data-toggle="tab" href="#roleList">列表</a>
+															</li>
+														</ul>
+													</div>
+												</div>
+
+												<div class="widget-body">
+													<div class="widget-main padding-12 no-padding-left no-padding-right">
+														<div class="tab-content padding-4">
+																 <table class="table table-striped table-bordered align-center "> 
+																    <tr class="bolder" >
+																	  <td>班级</td>
+																	  <td>试卷名称</td>
+																		<td>已考试人数</td>
+																	  <td>平均分</td>
+																		<td>最高分</td>
+																		<td>最低分</td>
+																	  <shiro:hasPermission name="testScores:to_look or testScores:to_erorrList">
+																	  <td>操作</td>
+																	  </shiro:hasPermission>
+																	</tr>
+																	 <tr class="table1" th:each="list,liststart:${list}">
+																	  <td>[[${list.class_name }]]</td>
+																	  <td>[[${list.test_title }]]</td>
+																		 <td>[[${list.count}]]/[[${list.count1}]]</td>
+																		 <td>[[${list.avg }]]</td>
+																		 <td>[[${list.max}]]</td>
+																		 <td>[[${list.min}]]</td>
+															        <shiro:hasPermission name="testScores:to_look or testScores:to_erorrList">
+																	    <td>
+                                                                              <shiro:hasPermission name="testScores:to_look">
+                                                                                 <button class="btn btn-minier btn-white btn-info" ><a  style="text-decoration:none;" target="_self" th:href="'/testScores/to_studentList?class_id='+${list.class_id}+'&test_title='+${list.test_title }">&nbsp;查&nbsp;看&nbsp;</a></button>
+                                                                              </shiro:hasPermission>
+																			<shiro:hasPermission name="testScores:to_erorrList">
+																				<button class="btn btn-minier btn-white btn-info" ><a  style="text-decoration:none;" target="_self" th:href="'/testScores/to_erorrList?class_id='+${list.class_id}+'&test_title='+${list.test_title }">&nbsp;错&nbsp;题&nbsp;汇&nbsp;总&nbsp;</a></button>
+																			</shiro:hasPermission>
+																			<shiro:hasPermission name="testScores:to_erorrList">
+																				<button class="btn btn-minier btn-white btn-info" ><a  style="text-decoration:none;" target="_self" th:href="'/testScores/to_del?class_id='+${list.class_id}+'&test_title='+${list.test_title }">&nbsp;删&nbsp;除&nbsp;</a></button>
+																			</shiro:hasPermission>
+                                                                            </td>
+                                                                          </shiro:hasPermission>
+                                                                      </tr>
+                                                                   </table>
+                                              <nav style="float: right;margin-outside: 90%">
+                                                  <ul class="pagination" style="margin-top: 0px;margin-bottom: 0px">
+                                                      <li th:if="${index>1}">
+                                                          <a th:href="'/testScores/to_list?index='+${index-1}"  aria-label="Previous">
+                                                              <span aria-hidden="true">&laquo;</span>
+                                                          </a>
+                                                      </li>
+                                                      <li class="disabled" th:if="${index==1}">
+                                                          <a href="#" aria-label="Previous">
+                                                              <span aria-hidden="true">&laquo;</span>
+                                                          </a>
+                                                      </li>
+
+                                                      <li th:if="${count<10}" th:each="i,start:${#numbers.sequence(1,count)}">
+                                                          <a  th:if="${index==i}" href="#" class="active" style="background-color: #8AB2C9"><span th:width="20px"  >[[${i}]]</span></a>
+                                                          <a th:if="${index!=i}" th:href="'/testScores/to_list?index='+${i}"><span th:width="20px"  >[[${i}]]</span></a>
+                                                      </li>
+                                                      <li th:if="${count>=10}" th:each="i,start:${#numbers.sequence(index-4,index+5)}">
+                                                          <a  th:if="${index==i}" href="#" class="active" style="background-color: #8AB2C9"><span th:width="20px"  >[[${i}]]</span></a>
+                                                          <a th:if="${index!=i}" th:href="'/testScores/to_list?index='+${i}"><span th:width="20px"  >[[${i}]]</span></a>
+                                                      </li>
+                                                      <li th:if="${index!=count}">
+                                                          <a th:href="'/testScores/to_list?index='+${index+1}" aria-label="Next">
+                                                              <span aria-hidden="true">&raquo;</span>
+                                                          </a>
+                                                      </li>
+                                                      <li class="disabled" th:if="${index==count}">
+
+                                                          <a href="#" aria-label="Next">
+                                                                  <span aria-hidden="true">&raquo;</span>
+                                                          </a>
+                                                      </li>
+                                                  </ul>
+                                              </nav>
+                              </div>
+                          </div>
+                      </div><!-- /.page-content -->
+					<!-- 内容页 end -->
+				</div>
+			</div><!-- /.main-content -->
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+
+		<script src="../static/ace-admin/js/jquery.min.js"></script>
+		<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+		<script src="../static/ace-admin/js/layer/laydate/laydate.js"></script>
+		<script src="../static/ace-admin/js/layer/layer.min.js"></script>
+
+	</body>
+<section>
+	<script>
+		$(function () {
+            var navbar=window.parent.$("#navbar").outerHeight()
+            var content=window.parent.$(".content-tabs").outerHeight()
+            var widgetheader=$(".widget-header").outerHeight()+100
+            var h=(window.innerHeight-content-widgetheader)/8
+            $(".table1").attr("style","height:"+h+"px;")
+            $(".table1").children().attr("style","vertical-align: middle")
+        })
+	</script>
+</section>
+</html>

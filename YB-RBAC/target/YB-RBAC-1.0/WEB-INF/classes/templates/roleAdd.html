@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="commons/header :: common"></head>
+<style type="text/css">
+	.has-success  {
+		border-color: #1ab394;
+	}
+	.has-warning  {
+		border-color: #f8ac59;
+	}
+	.has-error {
+		border-color: #ed5565;
+	}
+	.has-success  {
+		color: #1ab394;
+	}
+	.has-warning  {
+		color: #f8ac59;
+	}
+	.has-error {
+		color: #ed5565;
+	}
+</style>
+	</head>
+
+	<body class="no-skin">
+	  
+
+		<div class="main-container ace-save-state" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.loadState('main-container')}catch(e){}
+			</script>
+            
+
+			<!--- 内容主体 start -->
+			<div class="main-content">
+				<div class="main-content-inner">
+					<!-- 向导栏 end-->
+
+					<!-- 内容页 start -->
+					<div class="page-content">
+				          			<div class="widget-box transparent" id="widget-box-13">
+												<div class="widget-header">
+													<h4 class="widget-title lighter">角色管理</h4>
+
+													<div class="widget-toolbar no-border">
+														<ul class="nav nav-tabs" id="myTab2">
+															<li  class="active">
+																<a data-toggle="tab" href="#roleAdd">增加</a>
+															</li>
+															<li>
+																<a data-toggle="tab" href="javascript:void(0)" onclick="window.location.href='/role/toRoleList'">列表</a>
+															</li>
+														</ul>
+													</div>
+												</div>
+
+												<div class="widget-body">
+													<div class="widget-main padding-12 no-padding-left no-padding-right">
+														<div class="tab-content padding-4">
+														
+															<div id="roleAdd" class="tab-pane in active ">
+																<div class="scrollable-horizontal" data-size="800">
+																<form action="/role/addRole" method="post" class="form-horizontal" role="form" style="font-size: 16px" onsubmit="return test()">
+																		<div class="form-group">
+																			<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 角色名 </label>
+
+																			<div class="col-sm-9">
+																				<input name="role_name" type="text" required="required" id="form-field-1" placeholder="角色名" class="col-xs-10 col-sm-5" onblur="getaccount()"/>
+																			</div>
+																		</div>
+
+																		<div class="form-group">
+																			<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 全部权限 <input id="chkAllPermissions"  type="checkbox" /></label>
+
+																		</div>
+																			<div class="form-group">
+																				    <div class="row" >
+																						<div class="row myclass" th:each="modularVo,modularstat:${modularVos}" style="border-top: 1px dashed #e7eaec;" >
+																							  <div  class="col-sm-2" style="text-align: center;">
+																								  <div style="margin-left: 40px"><input onclick="chkModularPermission(this)"  type="checkbox" />[[${modularVo.modular_name}]]</div>
+																							  </div>
+																							<div class="col-sm-10" style="border-left:1px dashed #e7eaec;">
+																								<div class="row" th:each="per,permissionstart:${modularVo.pers}" >
+																									<div class="col-sm-12 row form-group1" th:if="${per.permission_parent==0}">
+																										<div class="col-sm-3">
+																											<input  name="permissionId"onclick="chkModularPermission1(this)" th:value="${per.permission_id}" type="checkbox" />
+																											[[${per.permission_name}]]
+																										</div>
+																										<div class="col-sm-9">
+																											<div class="col-sm-3"   th:each="per1,permissionstart:${modularVo.pers}" th:if="${ per1.permission_parent==per.permission_id}"  >
+																												<input name="permissionId"  th:value="${per1.permission_name}" type="checkbox" />
+																												[[${per1.permission_name}]]
+																											</div>
+																										</div>
+																									</div>
+
+																								</div>
+																							</div>
+																						</div>
+																					</div>
+
+																			</div>
+
+																		
+																
+
+																		
+																		
+																		<div class="form-group">
+																			
+																			<div class="col-sm-7 text-right">
+																				<button type="submit" class="btn btn-primary">增加角色</button>
+																			</div>
+																		</div>
+									</form>
+
+									</div>
+									</div>
+
+												
+									</div>
+								</div>
+							</div>
+						</div>
+					</div><!-- /.page-content -->
+					<!-- 内容页 end -->
+				</div>
+			</div><!-- /.main-content -->
+			<!--- 内容主体 end -->
+
+			 <!--页尾 start -->
+			<div th:include="commons/footer :: common"></div>
+			 <!--页尾 end -->
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script src="../static/ace-admin/js/jquery.min.js"></script>
+		<script src="../static/ace-admin/js/bootstrap.min.js"></script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<![endif]-->
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='${pageContext.request.contextPath }/libs/ace-admin/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+
+		<!-- page specific plugin scripts -->
+
+		<!-- ace scripts -->
+		<script src="../static/ace-admin/js/ace-elements.min.js"></script>
+		<script src="../static/ace-admin/js/ace.min.js"></script>
+		<script src="../static/ace-admin/js/layer/laydate/laydate.js"></script>
+		<script src="../static/ace-admin/js/layer/layer.min.js"></script>
+		<!-- inline scripts related to this page -->
+		<section>
+		<script type="text/javascript" th:inline="javascript">
+            function getaccount() {
+                $("#form-field-1").next().remove()
+                var role_name=$("#form-field-1").val()
+                $.ajax({
+                    url:'/role/roleName',
+                    data:{'role_name':role_name},
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success:function (data) {
+                        if(data.msg!=null) {
+                            $("#form-field-1").parent().append("<span style='color: red' class='msg' id='text' value='aaa '>" + data.msg + "</span>")
+                            $("#form-field-1").removeClass("has-success")
+                            $("#form-field-1").addClass("has-error")
+                        }else{
+
+                                $("#form-field-1").removeClass("has-error")
+                                $("#form-field-1").addClass("has-success")
+						}
+                    }
+                })
+            }
+            function test() {
+                if($("#text").size() > 0){
+                    layer.alert('内容')
+                    layer.alert('角色名填写错误！', {
+                        icon: 5,
+                        skin: 'layer-ext-moon',
+                    })
+                    return false
+                }
+                return true
+            }
+            $(function () {
+                var msg1 = [[${msg1}]];
+                var msg2 = [[${msg2}]];
+                var name=[[${session.user.user.user_name}]];
+                if(msg1!=null) {
+                    layer.msg(msg1, {
+                        time: 0 ,//不自动关闭
+                        icon:6,
+                        btn: ['确定', '取消'],
+                        yes: function(index){
+                            layer.close(index);
+							location.href="/role/toRoleList"
+                        }
+                    });
+                }
+                if(msg2!=null){
+                    layer.alert('内容')
+
+                    layer.alert(msg2, {
+                        icon: 5,
+                        skin: 'layer-ext-moon',
+                    })
+
+                }
+            })
+		   //1.权限全部选中、反选
+		   $("#chkAllPermissions").click(function(){
+			   //当前对象选中，全部复选框选中，否则反选
+			   if($(this).prop("checked")==true){
+				   $("input[type='checkbox']").prop("checked",true);
+			   }else{
+				   $("input[type='checkbox']").prop("checked",false);
+			   }
+			 
+		   });
+		   //2.模块权限的选中、反选
+		   var chkModularPermission=function(o){
+			   
+			   //alert("test");
+			   //通过位置计算，实现模块的范围选中
+			   var parentDiv=$(o).parents(".myclass");
+			   var chkBox=parentDiv.find("input[type='checkbox']");
+			   console.log(chkBox);
+			   if($(o).prop("checked")==true){
+				   chkBox.prop("checked",true);
+			   }else{
+				   chkBox.prop("checked",false);
+			   }
+			 
+			   
+	
+		   };
+		   
+		</script>
+		</section>
+	</body>
+</html>

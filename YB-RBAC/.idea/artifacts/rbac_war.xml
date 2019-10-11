@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="rbac:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="YB-RBAC-1.0.war">
+      <element id="artifact" artifact-name="rbac:war exploded" />
+    </root>
+  </artifact>
+</component>

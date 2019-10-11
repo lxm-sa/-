@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="UTF-8"/>
+		<title></title>
+		<link href="../static/ace-admin/css/bootstrap.min.css" rel="stylesheet"/>
+	    <link href="../static/ace-admin/css/bootstrap-table.min.css" rel="stylesheet"/>
+	    <link href="../static/ace-admin/css/animate.min.css" rel="stylesheet"/>
+	    <link href="../static/ace-admin/css/font-awesome.min.css" rel="stylesheet"/>
+	    <link rel="stylesheet" href="../static/ace-admin/css/plugins/bootstrapValidator/bootstrapValidator.min.css"/>
+	    <link rel="stylesheet" href="../static/ace-admin/css/style.min.css" />
+	    <style>
+			.back:hover{cursor: pointer;}
+			.fixed-table-toolbar .btn-group>.btn-group:last-child>.btn {
+				border-top-right-radius: 0px;
+				border-bottom-right-radius: 0px;
+			}
+			label{width:100px;}
+			.popup_de{
+				background-color:rgba(0,0,0,0.3);
+				width:100%;
+				height: 100%;
+				position:fixed;
+				z-index:999;
+				top:0;
+				left:0;
+				display:none;
+			}
+			.bbox{
+				display: -webkit-box;   /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+				display: -moz-box;      /* 老版本语法: Firefox (buggy) */
+				display: -ms-flexbox;   /* 混合版本语法: IE 10 */
+				display: -webkit-flex;  /* 新版本语法: Chrome 21+ */
+				display: -moz-flex;
+				display: flex;          /* 新版本语法: Opera 12.1, Firefox 22+ */
+			}
+			.bbox.xycenter{
+				-moz-box-pack: center; /*Firefox*/
+				-webkit-box-pack: center; /*Safari,Opera,Chrome*/
+				box-pack: center;
+				-moz-justify-content: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				-moz-box-align: center; /*Firefox*/
+				-webkit-box-align:center; /*Safari,Opera,Chrome*/
+				box-align: center;
+				-moz-align-items: center;
+				-webkit-align-items: center;
+				align-items:center;
+			}
+			.popup_de .popup_box{
+				width:300px;
+				height:150px;
+				font-family: '微软雅黑';
+				background-color: #fff;
+				border-radius:5px;
+				color:#333;
+			}
+			.popup_de .popup_btn{
+				display: inline-block;
+				width:100px;
+				height:30px;
+				border-radius: 3px;
+				border:1px solid #1ab394;
+				font-size:15px;
+				text-align: center;
+				line-height: 30px;
+				margin-right:15px;
+				cursor: pointer;
+			}
+			.popup_de .show_msg{
+				display: block;
+				width:100%;
+				text-align: center;
+				font-size:18px;
+				margin-top:40px;
+				margin-bottom: 20px;
+				padding:10px;
+			}
+			.popup_de .popup_close{
+				width:30px;
+				height:30px;
+				font-size:25px;
+				text-align: center;
+				display: inline-block;
+				cursor:pointer;
+				float: right;
+				border-top-right-radius: 5px;
+				line-height:30px;
+			}
+			.popup_de .popup_close:hover{
+				background-color: #1ab394;
+				color:#fff;
+			}
+			.popup_de .btn_submit{
+				background-color: #1ab394;
+				color:#fff;
+			}
+			.popup_de .btn_box{
+				text-align: center;
+			}
+	    </style>
+	</head>
+	<body>
+		<div class="tableBody">
+			<nav class="navbar navbar-inverse " role="navigation">
+				<div class="container-fluid">
+					<div style="margin-left: 50px">
+						<ul class="nav navbar-nav">
+							<shiro:haspermission name="sources:learnSourcesPage">
+								<li ><a href="/learnSourcesPage">条形码资源管理</a></li>
+							</shiro:haspermission>
+							<shiro:haspermission name="sources:categoryPage">
+								<li ><a href="/categoryPage">条形码资源分类管理</a></li>
+							</shiro:haspermission>
+							<shiro:haspermission name="sources:subjectPage">
+								<li><a href="/subjectPage">学习科目管理</a></li>
+							</shiro:haspermission>
+							<shiro:haspermission name="sources:partPage">
+								<li ><a href="/partPage">部件管理</a></li>
+							</shiro:haspermission>
+							<shiro:haspermission name="sources:projectPage">
+								<li  class="active"><a href="/projectPage">实训项目管理</a></li>
+							</shiro:haspermission>
+							<shiro:haspermission name="sources:proContentPage">
+								<li><a href="/proContentPage">实训内容管理</a></li>
+							</shiro:haspermission>
+						</ul>
+					</div>
+				</div>
+			</nav>
+			<div style="width: 95%; margin:0 auto;font-size: 15px;">
+		  	  <table id="mytab" class="table table-hover"></table>
+			</div>
+		  	<div id="toolbar" class="btn-group pull-right" style="margin-right: 20px; margin-top: 10px">
+	            <button id="btn_edit" type="button" class="btn btn-default" style="color: rgb(255, 140, 60);display: none; border-radius: 0">
+	                <span class="glyphicon glyphicon-edit" style="color: rgb(255, 140, 60);"  aria-hidden="true" ></span>修改项目信息
+	            </button>
+	            <button id="btn_delete" type="button" class="btn btn-default" style="color: rgb(252, 28, 45);display: none">
+	                <span class="glyphicon glyphicon-trash" style="color: rgb(252, 28, 45);" aria-hidden="true"></span>删除实训项目
+	            </button>
+	            <button id="btn_add" type="button" class="btn btn-default" style="color: rgb(0, 144, 45);">
+	                <span class="glyphicon glyphicon-plus" style="color: rgb(0, 144, 45);" aria-hidden="true"></span>新增实训项目
+	            </button>
+        	</div>
+        </div>
+        <div class="addBody" style="width:100%; display: none;position: absolute;top:10px">
+        	<div class="col-sm-12">
+        		<div class="ibox float-e-margins">
+        			<div class="ibox-title">
+	                    <h5>新增实训项目</h5>
+	                </div>
+	                <div class="ibox-content">
+		                <form id="addForm" method="post" class="form-horizontal">
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">项目名称</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" class="form-control" name="pro_name" id="add_Name"/>
+		                        </div>
+		                    </div>
+		                    <div class="hr-line-dashed"></div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">说明</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" class="form-control" name="remark" id="add_remark"/>
+		                        </div>
+		                    </div>
+							<div class="hr-line-dashed"></div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">科目</label>
+								<div class="col-sm-10" style="margin-top: auto">
+									<select id="sel_sub" name="sub_id" class="selectpicker" title="请选择科目" data-width="200px" data-height="35px" style="height: 35px;width: 200px">
+
+									</select>
+								</div>
+							</div>
+
+
+		                    <div class="hr-line-dashed"></div>
+		                    <div class="form-group">
+		                        <div class="col-sm-2 col-sm-offset-2">
+		                            <button type="button" class="btn btn-primary btn-block"  id="add_saveBtn">保存</button>
+		                        </div>
+		                        <div class="col-sm-2 col-sm-offset-1">
+		                            <button type="button" class="btn btn-default btn-block"  id="add_backBtn">返回</button>
+		                        </div>
+		                    </div>
+
+                        </form>
+		          </div>
+		       </div>
+		    </div>
+		 </div>
+		<div class="changeBody" style="width:100%; height:100%; display: none;position: absolute;top:10px;">
+        	<div class="col-sm-12">
+        		<div class="ibox float-e-margins">
+        			<div class="ibox-title">
+	                    <h5>修改项目信息</h5>
+	                </div>
+	                <div class="ibox-content">
+		                <form id="editForm" method="post" class="form-horizontal">
+		                 	<div class="form-group" style="display:none" >
+		                 		<label class="col-sm-2 control-label">ID</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" class="form-control" name="pro_id" id="edit_ID" readonly/>
+		                        </div>
+		                 	</div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">项目名称</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" class="form-control" name="pro_name" id="edit_Name" />
+		                        </div>
+		                    </div>
+		                    <div class="hr-line-dashed"></div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">说明</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" class="form-control" name="remark" id="edit_remark"/>
+		                        </div>
+		                    </div>
+
+							<div class="hr-line-dashed"></div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">科目</label>
+								<div class="col-sm-10" style="margin-top: auto">
+									<select id="edit_sub" name="sub_name" class="selectpicker" title="请选择科目" data-width="200px" data-height="35px" style="height: 35px;width: 200px">
+
+									</select>
+								</div>
+							</div>
+
+
+
+		                    <div class="hr-line-dashed"></div>
+		                    <div class="form-group">
+		                        <div class="col-sm-2 col-sm-offset-2">
+		                            <button type="button" class="btn btn-primary btn-block"  id="edit_saveBtn">保存</button>
+		                        </div>
+		                        <div class="col-sm-2 col-sm-offset-1">
+		                            <button type="button" class="btn btn-default btn-block"  id="edit_backBtn">返回</button>
+		                        </div>
+		                    </div>
+		                </form>
+	                </div>
+        		</div>
+            </div>
+		</div>
+
+		<div class="popup_de xycenter">
+			<div class="popup_box">
+				<span class="popup_close" value="关闭">×</span>
+			    <span class="show_msg">确定要删除该权限吗？</span>
+			    <div class="btn_box">
+				    <div class="popup_btn btn_submit" value="确定">确定</div>
+					<div class="popup_btn btn_cancel" value="取消">取消</div>
+			    </div>
+			</div>	
+		</div>
+	</body>
+    <script src="../static/ace-admin/js/jquery.min.js"></script>
+    <script src="../static/ace-admin/js/bootstrap.min.js"></script>
+	<script src="../static/ace-admin/js/layer/layer.js"></script>
+    <script src="../static/ace-admin/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="../static/ace-admin/js/plugins/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../static/ace-admin/js/plugins/bootstrapValidator/bootstrapValidator.min.js"></script>
+	<script src="../static/ace-admin/js/moment-with-locales.min.js"></script>
+	<script src="../static/ace-admin/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../static/ace-admin/js/manager/projectTrainManagement.js"></script>
+</html>

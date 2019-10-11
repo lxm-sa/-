@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>优标教育-登录</title>
+
+		<meta name="description" content="User login page" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<link rel="shortcut icon" href="../static/ace-admin/images/avatars/yb.png" type="image/x-icon" />
+		<!-- bootstrap & fontawesome -->
+		<link rel="stylesheet" href="../static/ace-admin/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../static/ace-admin/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+		<!-- text fonts -->
+		<link rel="stylesheet" href="../static/ace-admin/css/fonts.googleapis.com.css" />
+
+		<!-- ace styles -->
+		<link rel="stylesheet" href="../static/ace-admin/css/ace.min.css" />
+
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="../static/ace-admin/css/ace-part2.min.css" />
+		<![endif]-->
+		<link rel="stylesheet" href="../static/ace-admin/css/ace-rtl.min.css" />
+
+		<!--[if lte IE 9]>
+		  <link rel="stylesheet" href="../static/ace-admin/css/ace-ie.min.css" />
+		<![endif]-->
+
+		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+	</head>
+
+	<body class="login-layout" style="background-image: url(' ../static/ace-admin/images/avatars/login_bj.jpg');background-size: 100%;">
+		<div class="main-container">
+			<div class="main-content">
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-1">
+						<div class="login-container">
+							<div class="center">
+								<h1>
+									<i class="ace-icon fa fa-graduation-cap blue "></i>
+									<span class="red"></span>
+									<span class="white" id="id-text2">优标教育系统</span>
+								</h1>
+								<!--/* Workaround for bug https://youtrack.jetbrains.com/issue/IDEA-132738 -->
+								<!--@thymesVar id="msg" type="String"-->
+								<!--*/-->
+								<h4 class="red" id="id-company-text" th:text="${msg}"> </h4>
+							</div>
+
+							<div class="space-6"></div>
+
+							<div class="position-relative">
+								<div id="login-box" class="login-box visible widget-box no-border">
+									<div class="widget-body">
+										<div class="widget-main">
+											<h4 class="header blue lighter bigger">
+												<i class="ace-icon fa fa-coffee green"></i>
+												用户登录
+											</h4>
+
+											<div class="space-6"></div>
+
+											<form action="/user/loginUser" method="post">
+												<fieldset>
+													<label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input name="user_account" type="text" class="form-control" placeholder="账号名" />
+															<i class="ace-icon fa fa-user"></i>
+														</span>
+													</label>
+
+													<label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input name="user_pwd" type="password" class="form-control" placeholder="密码" />
+															<i class="ace-icon fa fa-lock"></i>
+														</span>
+													</label>
+
+													<div class="space"></div>
+
+													<div class="clearfix">
+												
+
+														<button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
+															<i class="ace-icon fa fa-key"></i>
+															<span class="bigger-110">登&nbsp;录</span>
+														</button>
+													</div>
+
+													<div class="space-4"></div>
+												</fieldset>
+											</form>
+
+										    <div >还没有账号吗?<a href="/register" >点击注册</a></div>
+										</div><!-- /.widget-main -->
+
+									</div><!-- /.widget-body -->
+								</div><!-- /.login-box -->
+
+
+							</div><!-- /.position-relative -->
+
+						
+						</div>
+					</div><!-- /.col -->
+				</div><!-- /.row -->
+			</div><!-- /.main-content -->
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script src="../static/ace-admin/js/jquery.min.js"></script>
+		<script src="../static/ace-admin/js/jquery-2.1.4.min.js"></script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<![endif]-->
+		<!-- inline scripts related to this page -->
+	<section>
+		<script  th:inline="javascript">
+            $(function () {
+                if([[${msg}]]==null)
+                 url=location.href
+                var times = url.split("?"); //分切变量 url 分隔符号为 "?"
+
+                if(times[1] != 1){ //如果?后的值不等于1表示没有刷新
+
+                    url += "?1"; //把变量 url 的值加入 ?1
+                     console.log('aa')
+                    self.location.replace(url); //刷新页面
+
+                }
+            })
+		</script>
+	</section>
+
+	</body>
+</html>
